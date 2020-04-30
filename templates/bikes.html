@@ -3,6 +3,7 @@
 <div class = "content">
   {% for i in bike %}
   <div class = "bikes">
+    <img src = "{{i[1]}}" alt = "img" >
     <a href = "{{ url_for('home') }}"> {{i[0]}} </a>
   </div>
   {% endfor %}

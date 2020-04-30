@@ -11,7 +11,7 @@ def home():
 def bikes():
     conn = sqlite3.connect('Beamma-Bikes.db')
     c = conn.cursor()
-    c.execute("SELECT name FROM bikes")
+    c.execute("SELECT name, image FROM bikes")
     bike = c.fetchall()
     conn.close()
     return render_template("bikes.html", bike = bike)

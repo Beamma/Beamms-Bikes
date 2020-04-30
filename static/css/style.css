@@ -1,0 +1,33 @@
+body {
+  margin: 0px;
+}
+
+.wrapper nav {
+	background-color: black;
+	font-size: 100%;
+	margin: 0px;
+	width: 100%;
+	overflow: hidden; /*no x scroll bard*/
+	height: 7vh;
+  padding-top: 2.3%;
+}
+
+.wrapper nav a {
+	text-decoration: none;
+	color: rgb(201, 201, 201);
+	font-family: "Roboto", sans-serif; /*set font*/
+	padding: 2.5%;
+	font-size: 150%;
+}
+
+.wrapper nav a:hover {
+  background: grey;
+}
+
+.bikes {
+  width: 200px;
+  margin: 10px;
+  float: left;
+  height: 40px;
+  text-align: center;
+}

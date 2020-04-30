@@ -1,6 +1,10 @@
 {% extends 'layout.html' %}
 {% block content %}
 <div class = "content">
-  bikes
+  {% for i in bike %}
+  <div class = "bikes">
+    <a href = "{{ url_for('home') }}"> {{i[0]}} </a>
+  </div>
+  {% endfor %}
 </div>
 {% endblock %}

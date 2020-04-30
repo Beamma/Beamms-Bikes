@@ -1,6 +1,11 @@
 {% extends 'layout.html' %}
 {% block content %}
 <div class = "content">
+  <div class = filters>
+    <form method="POST">
+      <button type = "submit" name = "Polygon" value = "1">Polygon</button>
+    </form>
+  </div>
   {% for i in bike %}
   <div class = "bikes">
     <img src = "{{i[1]}}" alt = "img" >

@@ -27,9 +27,12 @@ def bikes():
         r_enduro = request.form.get('enduro')
         r_trail = request.form.get('trail')
         r_ebike = request.form.get('ebike')
+        r_downhill = request.form.get('downhill')
+        r_jumper = request.form.get('jumper')
+        r_xc = request.form.get('xc')
 
         # Add "WHERE" if a filter has been applied
-        if r_polygon or r_trek or r_giant or r_liv or r_trail or r_ebike or r_enduro is not None:
+        if r_polygon or r_trek or r_giant or r_liv or r_trail or r_ebike or r_enduro or r_downhill or r_jumper or r_xc is not None:
             query += "WHERE "
 
         # Check what filters have been applied
@@ -73,6 +76,24 @@ def bikes():
             if fcount > 0:
                 query += "AND " # Check if "AND" is neccessary
             query += "type = 5 " # Add Filter
+            fcount += 1
+
+        if r_downhill is not None:
+            if fcount > 0:
+                query += "AND " # Check if "AND" is neccessary
+            query += "type = 4 " # Add Filter
+            fcount += 1
+
+        if r_jumper is not None:
+            if fcount > 0:
+                query += "AND " # Check if "AND" is neccessary
+            query += "type = 2 " # Add Filter
+            fcount += 1
+
+        if r_xc is not None:
+            if fcount > 0:
+                query += "AND " # Check if "AND" is neccessary
+            query += "type = 6 " # Add Filter
             fcount += 1
 
         print(query) # Debug

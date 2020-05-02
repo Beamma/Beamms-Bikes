@@ -61,7 +61,7 @@ height: 1000px;
 float: left;
 }
 
-.content .filters button {
+.content .filters form {
   margin: 5px;
 }
 

@@ -1,9 +1,9 @@
 html, body{
-    margin: 0;/*get rid of "borders"*/
-    padding: 0;
-    height: 100%;/*set height to full heigh of screen*/
-    width: 100%; /*set width to full width of screen*/
-    scroll-behavior: smooth; /* makes anchors scroll smooth */
+  margin: 0;/*get rid of "borders"*/
+  padding: 0;
+  height: 100%;/*set height to full heigh of screen*/
+  width: 100%; /*set width to full width of screen*/
+  scroll-behavior: smooth; /* makes anchors scroll smooth */
 }
 
 .whole {
@@ -56,13 +56,18 @@ html, body{
 }
 
 .content .filters {
-width: 20%;
-height: 1000px;
-float: left;
+  width: 20%;
+  height: 1000px;
+  float: left;
 }
 
 .content .filters form {
   margin: 5px;
+}
+
+.content .filters b {
+  float: left;
+  width: 100%;
 }
 
 .bikes {

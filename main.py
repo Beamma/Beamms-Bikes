@@ -7,17 +7,17 @@ app = Flask(__name__)
 def home():
     return render_template("home.html")
 
-@app.route('/bikes')
-def bikes():
-    conn = sqlite3.connect('Beamma-Bikes.db')
-    c = conn.cursor()
-    c.execute("SELECT name, image FROM Bikes")
-    bike = c.fetchall()
-    conn.close()
-    return render_template("bikes.html", bike = bike)
+# @app.route('/bikes')
+# def bikes():
+#     conn = sqlite3.connect('Beamma-Bikes.db')
+#     c = conn.cursor()
+#     c.execute("SELECT name, image FROM Bikes")
+#     bike = c.fetchall()
+#     conn.close()
+#     return render_template("bikes.html", bike = bike)
 
 @app.route('/bikes', methods=["GET","POST"])
-def filtered():
+def bikes():
     if request.method == 'POST':
 
         # VARIABLES
@@ -33,33 +33,35 @@ def filtered():
         two_t = ""
         polygon = ""
         trek = ""
+        type =""
 
         # REQUESTS
-        polygon = request.form.get('polygon')
-        trek = request.form.get('trek')
-        type = request.form.get('type')
+        r_polygon = request.form.get('polygon')
+        r_trek = request.form.get('trek')
+        r_type = request.form.get('type')
 
         # CHECK FILTERS
-        if polygon is not None:
+        if r_polygon is not None:
             where = " WHERE"
             polygon = "1"
             b_count += 1
 
-        if trek is not None:
+        if r_trek is not None:
             where = " WHERE"
-            trek ="1"
+            trek ="2"
             b_count += 1
 
-        if type is not None:
+        if r_type is not None:
             where = " WHERE"
             type = "5"
             t_count += 1
+            if b_count > 0:
+                f_count += 1
 
 
         # ADDS "AND" IF NECCESARY
         if b_count > 0:
             one_b = " brand ="
-            f_count += 1
 
         if b_count > 1:
             two_b = " or "
@@ -75,6 +77,14 @@ def filtered():
 
         if t_count > 1:
             two_t = " or "
+        conn = sqlite3.connect('Beamma-Bikes.db')
+        c = conn.cursor()
+        print("SELECT name, image FROM Bike" + where + one_b + polygon + two_b + trek + s_filter + one_t + type)
+        c.execute("SELECT name, image FROM Bikes" + where + one_b + polygon + two_b + trek + s_filter + one_t + type)
+        bike = c.fetchall()
+        conn.close()
+        return render_template("bikes.html", bike = bike)
+    else:
         conn = sqlite3.connect('Beamma-Bikes.db')
         c = conn.cursor()
         c.execute("SELECT name, image FROM Bikes")

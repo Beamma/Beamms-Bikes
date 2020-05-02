@@ -7,17 +7,10 @@ app = Flask(__name__)
 def home():
     return render_template("home.html")
 
-# @app.route('/bikes')
-# def bikes():
-#     conn = sqlite3.connect('Beamma-Bikes.db')
-#     c = conn.cursor()
-#     c.execute("SELECT name, image FROM Bikes")
-#     bike = c.fetchall()
-#     conn.close()
-#     return render_template("bikes.html", bike = bike)
-
 @app.route('/bikes', methods=["GET","POST"])
 def bikes():
+
+    # FILTER SYSTEM
     if request.method == 'POST':
 
         # VARIABLES
@@ -33,12 +26,12 @@ def bikes():
         two_t = ""
         polygon = ""
         trek = ""
-        type =""
+        enduro =""
 
         # REQUESTS
         r_polygon = request.form.get('polygon')
         r_trek = request.form.get('trek')
-        r_type = request.form.get('type')
+        r_enduro = request.form.get('enduro')
 
         # CHECK FILTERS
         if r_polygon is not None:
@@ -51,9 +44,9 @@ def bikes():
             trek ="2"
             b_count += 1
 
-        if r_type is not None:
+        if r_enduro is not None:
             where = " WHERE"
-            type = "5"
+            enduro = "5"
             t_count += 1
             if b_count > 0:
                 f_count += 1
@@ -77,13 +70,17 @@ def bikes():
 
         if t_count > 1:
             two_t = " or "
+
+        # CONNECT TO DATA BASE AND RUN BUILT QUERY
         conn = sqlite3.connect('Beamma-Bikes.db')
         c = conn.cursor()
-        print("SELECT name, image FROM Bike" + where + one_b + polygon + two_b + trek + s_filter + one_t + type)
-        c.execute("SELECT name, image FROM Bikes" + where + one_b + polygon + two_b + trek + s_filter + one_t + type)
+        print("SELECT name, image FROM Bike" + where + one_b + polygon + two_b + trek + s_filter + one_t + enduro) # DEBUG
+        c.execute("SELECT name, image FROM Bikes" + where + one_b + polygon + two_b + trek + s_filter + one_t + enduro)
         bike = c.fetchall()
         conn.close()
         return render_template("bikes.html", bike = bike)
+
+    # BASIC PAGE LOADING
     else:
         conn = sqlite3.connect('Beamma-Bikes.db')
         c = conn.cursor()

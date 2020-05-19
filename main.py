@@ -102,9 +102,9 @@ def bikes():
         conn = sqlite3.connect('Beamma-Bikes.db')
         c = conn.cursor()
         c.execute(query)
-        bike = c.fetchall()
+        bikes = c.fetchall()
         conn.close()
-        return render_template("bikes.html", bike = bike)
+        return render_template("bikes.html", bikes = bikes)
 
     # Normal Page Loading
     else:
@@ -112,10 +112,14 @@ def bikes():
         # Connect to databse and preform query
         conn = sqlite3.connect('Beamma-Bikes.db')
         c = conn.cursor()
-        c.execute("SELECT name, image FROM Bikes")
-        bike = c.fetchall()
+        c.execute("SELECT name, image, id FROM Bikes")
+        bikes = c.fetchall()
         conn.close()
-        return render_template("bikes.html", bike = bike)
+        return render_template("bikes.html", bikes = bikes)
+
+@app.route("/bikes/<id>")
+def test(id):
+    return render_template("select_bike.html", id = id)
 
 if __name__ == "__main__":
     app.run(debug=True)

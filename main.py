@@ -16,7 +16,7 @@ def bikes():
     if request.method == 'POST':
 
         # Variables
-        query = "SELECT name, image FROM bikes "
+        query = "SELECT name, image, id FROM bikes "
         fcount = 0
 
         # Requests
@@ -117,9 +117,15 @@ def bikes():
         conn.close()
         return render_template("bikes.html", bikes = bikes)
 
-@app.route("/bikes/<id>")
+@app.route("/<id>")
 def test(id):
-    return render_template("select_bike.html", id = id)
+    conn = sqlite3.connect('Beamma-Bikes.db')
+    c = conn.cursor()
+    c.execute("SELECT name, image FROM Bikes WHERE id=?", (id))
+    bikes = c.fetchall()
+    conn.close()
+    print(bikes)
+    return render_template("select_bike.html", bikes = bikes[0])
 
 if __name__ == "__main__":
     app.run(debug=True)

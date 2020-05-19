@@ -1,4 +1,11 @@
 {% extends 'layout.html' %}
 {% block content %}
-{{id}}
+<div class = "content">
+  <div class = "name">
+    <h1> {{ bikes[0] }} </h1>
+  </div>
+  <div class = "image">
+    <img src = "{{ bikes[1] }}" alt = "img">
+  </div>
+</div>
 {% endblock %}

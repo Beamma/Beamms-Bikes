@@ -33,8 +33,12 @@ html, body{
   text-align: center;
 }
 
-.wrapper nav {
-	background-color: black;
+nav a:hover {
+  background: grey;
+}
+
+nav {
+  background-color: black;
 	font-size: 100%;
 	margin: 0px;
 	width: 100%;
@@ -43,16 +47,12 @@ html, body{
   padding-top: 2.3%;
 }
 
-.wrapper nav a {
-	text-decoration: none;
+nav a {
+  text-decoration: none;
 	color: rgb(201, 201, 201);
 	font-family: "Roboto", sans-serif; /*set font*/
 	padding: 2.5%;
 	font-size: 150%;
-}
-
-.wrapper nav a:hover {
-  background: grey;
 }
 
 .content .filters {

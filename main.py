@@ -121,10 +121,9 @@ def bikes():
 def test(id):
     conn = sqlite3.connect('Beamma-Bikes.db')
     c = conn.cursor()
-    c.execute("SELECT name, image FROM Bikes WHERE id=?", (id))
+    c.execute("SELECT name, image, price FROM Bikes WHERE id=?", (id))
     bikes = c.fetchall()
     conn.close()
-    print(bikes)
     return render_template("select_bike.html", bikes = bikes[0])
 
 if __name__ == "__main__":

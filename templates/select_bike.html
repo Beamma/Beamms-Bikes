@@ -1,11 +1,18 @@
 {% extends 'layout.html' %}
 {% block content %}
 <div class = "content">
-  <div class = "name">
-    <h1> {{ bikes[0] }} </h1>
+  <div class = "bike_left">
+    <div class = "name">
+      <h1> {{ bikes[0] }} </h1>
+    </div>
+    <div class = "image">
+      <img src = "{{ bikes[1] }}" alt = "img">
+    </div>
   </div>
-  <div class = "image">
-    <img src = "{{ bikes[1] }}" alt = "img">
+  <div class = "bike_right">
+    <div class = "bike_info">
+      {{ bikes[2] }}
+    </div>
   </div>
 </div>
 {% endblock %}

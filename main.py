@@ -121,7 +121,7 @@ def bikes():
 def test(id):
     conn = sqlite3.connect('Beamma-Bikes.db')
     c = conn.cursor()
-    c.execute("SELECT name, image, price FROM Bikes WHERE id=?", (id))
+    c.execute("SELECT bikes.name, bikes.image, bikes.price, bikes.description, brand.name FROM bikes INNER JOIN brand ON bikes.brand = brand.id WHERE bikes.id=?", (id))
     bikes = c.fetchall()
     conn.close()
     return render_template("select_bike.html", bikes = bikes[0])

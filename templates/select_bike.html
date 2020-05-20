@@ -2,16 +2,21 @@
 {% block content %}
 <div class = "content">
   <div class = "bike_left">
-    <div class = "name">
-      <h1> {{ bikes[0] }} </h1>
-    </div>
     <div class = "image">
       <img src = "{{ bikes[1] }}" alt = "img">
     </div>
   </div>
   <div class = "bike_right">
     <div class = "bike_info">
-      {{ bikes[2] }}
+      <div class = "name">
+        {{ bikes[4] }}{{ bikes[0] }}
+      </div>
+      <div class = "price">
+        Price: ${{ bikes[2] }}
+      </div>
+      <div class = "description">
+        {{ bikes [3] }}
+      </div>
     </div>
   </div>
 </div>

@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,400;1,900&family=Teko:wght@500&display=swap');
+
 html, body{
   margin: 0;/*get rid of "borders"*/
   padding: 0;
@@ -83,39 +85,27 @@ nav a {
   height: 180px;
 }
 
-.bike_left {
-  width: 70%;
+.content .bike_left {
+  width: 50%;
   float: left;
-}
-
-.content .bike_left .name {
-  width: 100%%;
-  margin: 0px;
-  margin: 0px;
-}
-
-.content .bike_left .name h1 {
-  text-align: center;
-  font-size: 500%;
-  font-family: sans-serif;
-  color: orange;
-  width: 100%;
-  margin: 0px;
 }
 
 .content .bike_left .image {
   width: 100%;
-  margin: 0px;
+  margin: 5%;
 }
 
 .content .bike_left .image img {
-  width: 100%;
+  width:  80%;
+  -webkit-box-shadow: 0 0 20px black;
+  border-radius: 5%;
 }
 
 .content .bike_right {
-  width: 30%;
+  width: 40%;
   float: right;
   height: 100vh;
+  margin: 5%;
 }
 .content .bike_right .bike_info {
   width: 100%;
@@ -123,5 +113,19 @@ nav a {
   padding: 0px;
   text-align: center;
   height: 100vh;
-  background-color: rgba(215, 215, 215, 0.5);
+  font-family: 'Rubik', sans-serif;
+}
+
+.content .bike_right .bike_info .name {
+  font-family: 'Teko', sans-serif;
+  font-size: 200%;
+}
+
+.content .bike_right .bike_info .price {
+  font-size: 150%;
+  margin-top: 2%;
+}
+
+.content .bike_right .bike_info .description {
+  margin-top: 2%;
 }

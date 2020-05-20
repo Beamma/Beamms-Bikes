@@ -30,6 +30,7 @@ def bikes():
         r_downhill = request.form.get('downhill')
         r_jumper = request.form.get('jumper')
         r_xc = request.form.get('xc')
+        sort = request.form.get('sort')
 
         # Add "WHERE" if a filter has been applied
         if r_polygon or r_trek or r_giant or r_liv or r_trail or r_ebike or r_enduro or r_downhill or r_jumper or r_xc is not None:
@@ -96,8 +97,10 @@ def bikes():
             query += "type = 6 " # Add Filter
             fcount += 1
 
-        print(query) # Debug
+        print(sort)
+        query += sort
 
+        print(query) # Debug
         # Connect to databse and preform query
         conn = sqlite3.connect('Beamma-Bikes.db')
         c = conn.cursor()

@@ -18,7 +18,8 @@ def bikes():
         # Variables
         query = "SELECT name, image, id FROM bikes "
         fcount = 0
-
+        tcount = 0
+        bracket = ""
         # Requests
         r_polygon = request.form.get('polygon')
         r_trek = request.form.get('trek')
@@ -34,70 +35,75 @@ def bikes():
 
         # Add "WHERE" if a filter has been applied
         if r_polygon or r_trek or r_giant or r_liv or r_trail or r_ebike or r_enduro or r_downhill or r_jumper or r_xc is not None:
-            query += "WHERE "
-
+            query += "WHERE ("
+            bracket = ") "
         # Check what filters have been applied
         if r_polygon is not None:
             if fcount > 0:
-                query += "AND " # Check if "AND" is neccessary
+                query += "OR " # Check if "AND" is neccessary
             query += "brand = 1 " # Add Filter
             fcount += 1
 
         if r_trek is not None:
             if fcount > 0:
-                query += "AND " # Check if "AND" is neccessary
+                query += "OR " # Check if "AND" is neccessary
             query += "brand = 2 " # Add Filter
             fcount += 1
 
         if r_giant is not None:
             if fcount > 0:
-                query += "AND " # Check if "AND" is neccessary
+                query += "OR " # Check if "AND" is neccessary
             query += "brand = 3 " # Add Filter
             fcount += 1
 
         if r_liv is not None:
             if fcount > 0:
-                query += "AND " # Check if "AND" is neccessary
+                query += "OR " # Check if "AND" is neccessary
             query += "brand = 4 " # Add Filter
             fcount += 1
 
+        if r_polygon or r_trek or r_giant or r_liv is not None:
+            if r_trail or r_ebike or r_enduro or r_downhill or r_jumper or r_xc is not None:
+                query += ") AND ("
+
         if r_trail is not None:
-            if fcount > 0:
-                query += "AND " # Check if "AND" is neccessary
+            if tcount > 0:
+                query += "OR " # Check if "AND" is neccessary
             query += "type = 3 " # Add Filter
-            fcount += 1
+            tcount += 1
 
         if r_ebike is not None:
-            if fcount > 0:
-                query += "AND " # Check if "AND" is neccessary
+            if tcount > 0:
+                query += "OR " # Check if "AND" is neccessary
             query += "type = 1 " # Add Filter
-            fcount += 1
+            tcount += 1
 
         if r_enduro is not None:
-            if fcount > 0:
-                query += "AND " # Check if "AND" is neccessary
+            if tcount > 0:
+                query += "OR " # Check if "AND" is neccessary
             query += "type = 5 " # Add Filter
-            fcount += 1
+            tcount += 1
 
         if r_downhill is not None:
-            if fcount > 0:
-                query += "AND " # Check if "AND" is neccessary
+            if tcount > 0:
+                query += "OR " # Check if "AND" is neccessary
             query += "type = 4 " # Add Filter
-            fcount += 1
+            tcount += 1
 
         if r_jumper is not None:
-            if fcount > 0:
-                query += "AND " # Check if "AND" is neccessary
+            if tcount > 0:
+                query += "OR " # Check if "AND" is neccessary
             query += "type = 2 " # Add Filter
-            fcount += 1
+            tcount += 1
 
         if r_xc is not None:
-            if fcount > 0:
-                query += "AND " # Check if "AND" is neccessary
+            if tcount > 0:
+                query += "OR " # Check if "AND" is neccessary
             query += "type = 6 " # Add Filter
-            fcount += 1
+            tcount += 1
 
         print(sort)
+        query += bracket
         query += sort
 
         print(query) # Debug

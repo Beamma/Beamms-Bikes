@@ -19,6 +19,7 @@ def bikes():
         query = "SELECT name, image, id FROM bikes "
         fcount = 0
         tcount = 0
+        ycount = 0
         bracket = ""
         # Requests
         r_polygon = request.form.get('polygon')
@@ -31,10 +32,13 @@ def bikes():
         r_downhill = request.form.get('downhill')
         r_jumper = request.form.get('jumper')
         r_xc = request.form.get('xc')
+        twenty = request.form.get('2020')
+        nineteen = request.form.get('2019')
+        eighteen = request.form.get('2018')
         sort = request.form.get('sort')
 
         # Add "WHERE" if a filter has been applied
-        if r_polygon or r_trek or r_giant or r_liv or r_trail or r_ebike or r_enduro or r_downhill or r_jumper or r_xc is not None:
+        if r_polygon or r_trek or r_giant or r_liv or r_trail or r_ebike or r_enduro or r_downhill or r_jumper or r_xc or twenty or eighteen or nineteen is not None:
             query += "WHERE ("
             bracket = ") "
         # Check what filters have been applied
@@ -101,6 +105,28 @@ def bikes():
                 query += "OR " # Check if "AND" is neccessary
             query += "type = 6 " # Add Filter
             tcount += 1
+
+        if r_polygon or r_trek or r_giant or r_liv or r_trail or r_ebike or r_enduro or r_downhill or r_jumper or r_xc is not None:
+            if twenty or eighteen or nineteen is not None:
+                query += ") AND ("
+
+        if twenty is not None:
+            if ycount > 0:
+                query += "OR "
+            query += "year = 2020 "
+            ycount += 1
+
+        if nineteen is not None:
+            if ycount > 0:
+                query += "OR "
+            query += "year = 2019 "
+            ycount += 1
+
+        if eighteen is not None:
+            if ycount > 0:
+                query += "OR "
+            query += "year = 2018 "
+            ycount += 1
 
         print(sort)
         query += bracket

@@ -4,7 +4,7 @@ import sqlite3
 app = Flask(__name__)
 
 # Home Page
-@app.route('/home')
+@app.route('/')
 def home():
     return render_template("home.html")
 
@@ -128,11 +128,9 @@ def bikes():
             query += "year = 2018 "
             ycount += 1
 
-        print(sort)
         query += bracket
         query += sort
 
-        print(query) # Debug
         # Connect to databse and preform query
         conn = sqlite3.connect('Beamma-Bikes.db')
         c = conn.cursor()
@@ -152,13 +150,14 @@ def bikes():
         conn.close()
         return render_template("bikes.html", bikes = bikes)
 
-@app.route("/<id>")
-def test(id):
+@app.route("/bikes/<id>")
+def bike(id):
     conn = sqlite3.connect('Beamma-Bikes.db')
     c = conn.cursor()
-    c.execute("SELECT bikes.name, bikes.image, bikes.price, bikes.description, brand.name FROM bikes INNER JOIN brand ON bikes.brand = brand.id WHERE bikes.id=?", (id))
+    c.execute("SELECT bikes.name, bikes.image, bikes.price, bikes.description, brand.name FROM bikes INNER JOIN brand ON bikes.brand = brand.id WHERE bikes.id=?", (id,))
     bikes = c.fetchall()
     conn.close()
+
     return render_template("select_bike.html", bikes = bikes[0])
 
 if __name__ == "__main__":

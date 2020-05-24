@@ -11,14 +11,14 @@
       <label for="trek"> Trek</label><br>
 
       <input type="checkbox" id="giant" name="giant" value="3">
-      <label for="trail"> Giant</label><br>
+      <label for="giant"> Giant</label><br>
 
       <input type="checkbox" id="liv" name="liv" value="4">
-      <label for="trail"> Liv</label><br>
+      <label for="liv"> Liv</label><br>
 
       <b> Bike Type </b>
       <input type="checkbox" id="enduro" name="enduro" value="5">
-      <label for="type"> Enduro</label><br>
+      <label for="enduro"> Enduro</label><br>
 
       <input type="checkbox" id="trail" name="trail" value="3">
       <label for="trail"> Trail</label><br>
@@ -27,13 +27,13 @@
       <label for="ebike"> E-Bike</label><br>
 
       <input type="checkbox" id="downhill" name="downhill" value="4">
-      <label for="ebike"> Downhill</label><br>
+      <label for="downhill"> Downhill</label><br>
 
       <input type="checkbox" id="jumper" name="jumper" value="2">
-      <label for="ebike"> Dirt Jumper</label><br>
+      <label for="jumper"> Dirt Jumper</label><br>
 
       <input type="checkbox" id="xc" name="xc" value="6">
-      <label for="ebike"> X-Country</label><br>
+      <label for="xc"> X-Country</label><br>
 
       <b> Year </b>
       <input type="checkbox" id="2020" name="2020" value="20">
@@ -57,7 +57,7 @@
   {% for bike in bikes %}
   <div class = "bikes">
     <img src = "{{ bike[1] }}" alt = "img" >
-    <a href = "/{{ bike[2] }}"> {{ bike[0] }} </a>
+    <a href = "{{ url_for('bike', id=bike[2]) }}"> {{ bike[0] }} </a>
   </div>
   {% endfor %}
 </div>

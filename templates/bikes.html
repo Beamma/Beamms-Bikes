@@ -4,7 +4,15 @@
   <div class = filters>
     <form method="POST" name = "test" id = "test">
 
-			<b> Brands </b>
+      {% for type, filters in filter_options.items() %}
+        <b>{{ type }}</b>
+        {% for filter_item in filters %}
+          {% set index = 1 if type != 'year' else 0 %}
+          <input type="checkbox" id="{{ filter_item[index] }}" name="{{ type }}" value="{{ filter_item[0] }}">
+          <label for="{{ filter_item[index] }}"> {{ filter_item[index] }}</label><br>
+        {% endfor %}
+      {% endfor %}
+			<!-- <b> Brands </b>
 			{% for brand in brands %}
 				<input type="checkbox" id="{{ brand[1] }}" name="brand" value="{{ brand[0] }}">
 				<label for="{{ brand[1] }}"> {{ brand[1] }}</label><br>
@@ -26,7 +34,7 @@
 			{% for size in sizes %}
 				<input type="checkbox" id="{{ size[1] }}" name="sid" value="{{ size[0] }}">
 				<label for="{{ size[1] }}"> {{ size[1] }}</label><br>
-			{% endfor %}
+			{% endfor %} -->
 
 			<select name="sort" id = "sort">
 				<option value = "ORDER BY bikes.id ASC">Sort By</option>

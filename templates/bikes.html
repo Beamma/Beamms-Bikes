@@ -2,73 +2,40 @@
 {% block content %}
 <div class = "content">
   <div class = filters>
-    <form method="POST">
-      <b> Brands </b>
-      <input type="checkbox" id = "polygon" name="polygon" value="1">
-      <label for="polygon"> Polygon</label><br>
+    <form method="POST" name = "test" id = "test">
 
-      <input type="checkbox" id="trek" name="trek" value="2">
-      <label for="trek"> Trek</label><br>
+			<b> Brands </b>
+			{% for brand in brands %}
+				<input type="checkbox" id="{{ brand[1] }}" name="brand" value="{{ brand[0] }}">
+				<label for="{{ brand[1] }}"> {{ brand[1] }}</label><br>
+			{% endfor %}
 
-      <input type="checkbox" id="giant" name="giant" value="3">
-      <label for="giant"> Giant</label><br>
+			<b> Bike Type </b>
+			{% for type in types %}
+				<input type="checkbox" id="{{ type[1] }}" name="type" value="{{ type[0] }}">
+				<label for="{{ type[1] }}"> {{ type[1] }}</label><br>
+			{% endfor %}
 
-      <input type="checkbox" id="liv" name="liv" value="4">
-      <label for="liv"> Liv</label><br>
+			<b> Year </b>
+			{% for year in years %}
+				<input type="checkbox" id="{{ year[0] }}" name="year" value="{{ year[0] }}">
+				<label for="{{ year[0] }}"> {{ year[0] }}</label><br>
+			{% endfor %}
 
-      <b> Bike Type </b>
-      <input type="checkbox" id="enduro" name="enduro" value="5">
-      <label for="enduro"> Enduro</label><br>
+			<b>sizes</b>
+			{% for size in sizes %}
+				<input type="checkbox" id="{{ size[1] }}" name="sid" value="{{ size[0] }}">
+				<label for="{{ size[1] }}"> {{ size[1] }}</label><br>
+			{% endfor %}
 
-      <input type="checkbox" id="trail" name="trail" value="3">
-      <label for="trail"> Trail</label><br>
+			<select name="sort" id = "sort">
+				<option value = "ORDER BY bikes.id ASC">Sort By</option>
+				<option value = "ORDER BY bikes.price DESC">Price High To Low</option>
+				<option value = "ORDER By bikes.price ASC">Price Low To High</option>
+			</select>
 
-      <input type="checkbox" id="ebike" name="ebike" value="1">
-      <label for="ebike"> E-Bike</label><br>
-
-      <input type="checkbox" id="downhill" name="downhill" value="4">
-      <label for="downhill"> Downhill</label><br>
-
-      <input type="checkbox" id="jumper" name="jumper" value="2">
-      <label for="jumper"> Dirt Jumper</label><br>
-
-      <input type="checkbox" id="xc" name="xc" value="6">
-      <label for="xc"> X-Country</label><br>
-
-      <b> Year </b>
-      <input type="checkbox" id="2020" name="2020" value="20">
-      <label for="2020"> 2020</label><br>
-
-      <input type="checkbox" id="2019" name="2019" value="19">
-      <label for="2019"> 2019</label><br>
-
-      <input type="checkbox" id="2018" name="2018" value="18">
-      <label for="2018"> 2018</label><br>
-
-      <b>Sizes</b>
-      <input type="checkbox" id="XS" name="XS" value="XS">
-      <label for="XS"> XS</label><br>
-
-      <input type="checkbox" id="S" name="S" value="S">
-      <label for="S"> S</label><br>
-
-      <input type="checkbox" id="M" name="M" value="M">
-      <label for="M"> M</label><br>
-
-      <input type="checkbox" id="L" name="L" value="L">
-      <label for="L"> L</label><br>
-
-      <input type="checkbox" id="XL" name="XL" value="XL">
-      <label for="XL"> XL</label><br>
-
-      <select name="sort">
-        <option value = "ORDER BY bikes.id ASC">Sort By</option>
-        <option value = "ORDER BY bikes.price DESC">Price High To Low</option>
-        <option value = "ORDER By bikes.price ASC">Price Low To High</option>
-      </select>
-
-      <input type="submit" value="Submit">
-    </form>
+			<input type="submit" value="Submit">
+		</form>
   </div>
   {% for bike in bikes %}
   <div class = "bikes">

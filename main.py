@@ -15,24 +15,13 @@ def bikes():
     c = conn.cursor()
     c.execute("SELECT id, name FROM brand")
     brands = c.fetchall()
-    # brands.append("brands")
     c.execute("SELECT id, name FROM type")
     types = c.fetchall()
-    # types.append("type")
     c.execute("SELECT DISTINCT year FROM bikes ORDER BY year DESC")
     years = c.fetchall()
-    # years.append("year")
     c.execute("SELECT id, size FROM sizes ORDER BY id ASC")
     sizes = c.fetchall()
-    # sizes.append("sid")
-    # filter_options = [brands, types, years, sizes]
-    filter_options = dict(
-        brand=brands,
-        type=types,
-        year=years,
-        sid=sizes,
-    )
-    # print(filter_options)
+    filter_options = dict(brand=brands, type=types, year=years, sid=sizes)
 
 	# FILTER SYSTEM
     if request.method == 'POST':

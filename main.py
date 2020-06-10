@@ -1,17 +1,21 @@
-from flask import Flask, redirect, url_for, render_template, request
+from flask import Flask, redirect, url_for, render_template, request, session
 import sqlite3
 from werkzeug.security import generate_password_hash, check_password_hash
 
 app = Flask(__name__)
+app.config['SESSION_TYPE'] = 'memcached'
+app.config['SECRET_KEY'] = 'super secret key'
 
 # Home Page
 @app.route('/')
 def home():
-    return render_template("home.html")
+    logstatus = 'false'
+    return render_template("home.html", logstatus = session.get('logstatus', None))
 
 # Bikes Page
 @app.route('/bikes', methods=["GET","POST"])
 def bikes():
+    logstatus = 'false'
     conn = sqlite3.connect('Beamma-Bikes.db')
     c = conn.cursor()
     c.execute("SELECT id, name FROM brand")
@@ -51,7 +55,7 @@ def bikes():
         c.execute(query, parms)
         bikes = c.fetchall()
         conn.close()
-        return render_template("bikes.html", bikes = bikes, filter_options = filter_options)
+        return render_template("bikes.html", bikes = bikes, filter_options = filter_options, logstatus = session.get('logstatus', None))
 
 	# Normal Page Loading
     else:
@@ -62,37 +66,41 @@ def bikes():
         c.execute("SELECT name, image, id FROM Bikes")
         bikes = c.fetchall()
         conn.close()
-        return render_template("bikes.html", bikes = bikes, filter_options = filter_options)
+        return render_template("bikes.html", bikes = bikes, filter_options = filter_options, logstatus = session.get('logstatus', None))
 
 @app.route("/bikes/<id>")
 def bike(id):
+    logstatus = 'false'
     conn = sqlite3.connect('Beamma-Bikes.db')
     c = conn.cursor()
     c.execute("SELECT bikes.name, bikes.image, bikes.price, bikes.description, brand.name FROM bikes INNER JOIN brand ON bikes.brand = brand.id WHERE bikes.id=?", (id,))
     bikes = c.fetchall()
     conn.close()
 
-    return render_template("select_bike.html", bikes = bikes[0])
+    return render_template("select_bike.html", bikes = bikes[0], logstatus = session.get('logstatus', None))
 
 @app.route("/login", methods=["GET","POST"])
 def login():
     if request.method == "POST":
         user_name = request.form.get("user_name")
         password = request.form.get("password")
-        print(user_name)
-        print(password)
-        conn = sqlite3.connect('Beamma-Bikes.db')
-        c = conn.cursor()
-        c.execute("SELECT password FROM users WHERE name=?",(user_name,))
-        log_password = c.fetchall()
-        conn.close()
-        log_password = log_password[0]
-        print(log_password[0])
-        log_status = check_password_hash(log_password[0], password)
-        if log_status is True:
-            return redirect(url_for('bikes'))
-        else:
-            print("Failed")
+        if user_name and password:
+            print(user_name)
+            print(password)
+            conn = sqlite3.connect('Beamma-Bikes.db')
+            c = conn.cursor()
+            c.execute("SELECT password FROM users WHERE name=?",(user_name,))
+            log_password = c.fetchall()
+            conn.close()
+            log_password = log_password[0]
+            print(log_password[0])
+            log_status = check_password_hash(log_password[0], password)
+            if log_status is True:
+                session['logstatus'] = 'true'
+                return redirect(url_for('bikes'))
+            else:
+                session['logstatus'] = 'false'
+                print("Failed")
 
         return render_template("login.html")
     else:

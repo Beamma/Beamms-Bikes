@@ -2,4 +2,7 @@
   <a href = "{{ url_for('home') }}"> Home </a>
   <a href = "{{ url_for('bikes') }}"> Bikes </a>
   <a href = "{{ url_for('login') }}"> User </a>
+  {% if logstatus == "true": %}
+    hello
+  {% endif %}
 </nav>

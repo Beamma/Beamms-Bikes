@@ -81,30 +81,36 @@ def bike(id):
 
 @app.route("/login", methods=["GET","POST"])
 def login():
-    if request.method == "POST":
-        user_name = request.form.get("user_name")
-        password = request.form.get("password")
-        if user_name and password:
-            print(user_name)
-            print(password)
-            conn = sqlite3.connect('Beamma-Bikes.db')
-            c = conn.cursor()
-            c.execute("SELECT password FROM users WHERE name=?",(user_name,))
-            log_password = c.fetchall()
-            conn.close()
-            log_password = log_password[0]
-            print(log_password[0])
-            log_status = check_password_hash(log_password[0], password)
-            if log_status is True:
-                session['logstatus'] = 'true'
-                return redirect(url_for('bikes'))
-            else:
-                session['logstatus'] = 'false'
-                print("Failed")
-
-        return render_template("login.html")
+    log_status = 'false'
+    if session.get('logstatus', None) == "true":
+        return redirect(url_for('bikes'))
     else:
-        return render_template("login.html")
+        if request.method == "POST":
+            user_name = request.form.get("user_name")
+            password = request.form.get("password")
+            if user_name and password:
+                print(user_name)
+                print(password)
+                conn = sqlite3.connect('Beamma-Bikes.db')
+                c = conn.cursor()
+                c.execute("SELECT password FROM users WHERE name=?",(user_name,))
+                log_password = c.fetchall()
+                conn.close()
+                if log_password:
+                    log_password = log_password[0]
+                    print(log_password[0])
+                    log_status = check_password_hash(log_password[0], password)
+                if log_status is True:
+                    session['logstatus'] = 'true'
+                    return redirect(url_for('user'))
+                else:
+                    session['logstatus'] = 'false'
+                    print("Failed")
+                    return redirect(url_for('login'))
+            else:
+                return render_template("login.html")
+        else:
+            return render_template("login.html")
 
 @app.route("/register", methods=["GET","POST"])
 def register():
@@ -119,11 +125,18 @@ def register():
         cur.execute(SQL,[user_name, hashed_password])
         conn.commit()
         conn.close()
-
-        return render_template("register.html")
+        session['logstatus'] = "true"
+        return redirect(url_for('user'))
     else:
-        return render_template("register.html")
+        return render_template("register.html", logstatus = session.get('logstatus', None))
 
+@app.route("/user", methods=["GET", "POST"])
+def user():
+    if request.method == "POST":
+        if request.form.get("logout"):
+            session['logstatus'] = 'false'
+            return redirect(url_for('bikes'))
+    return render_template("user.html", logstatus = session.get('logstatus', None))
 
 if __name__ == "__main__":
     app.run(debug=True)

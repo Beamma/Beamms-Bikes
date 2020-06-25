@@ -76,13 +76,24 @@ def bike(id):
     c.execute("SELECT bikes.name, bikes.image, bikes.price, bikes.description, brand.name FROM bikes INNER JOIN brand ON bikes.brand = brand.id WHERE bikes.id=?", (id,))
     bikes = c.fetchall()
     conn.close()
-
+    if request.method == "POST":
+        quantity = 1
+        bike_id = 7
+        user_id = session.get('log_status', None)
+        print(user_id)
+        conn = sqlite3.connect('Beamma-Bikes.db')
+        c = conn.cursor()
+        SQL = "INSERT INTO cart(bike_id,user_id,quantity) VALUES(?,?)"
+        c = conn.cursor()
+        c.execute(SQL,[bike_id, user_id, quantity])
+        conn.commit()
+        conn.close()
     return render_template("select_bike.html", bikes = bikes[0], logstatus = session.get('logstatus', None))
 
 @app.route("/login", methods=["GET","POST"])
 def login():
     log_status = 'false'
-    if session.get('logstatus', None) == "true":
+    if session.get('logstatus', None) != "false":
         return redirect(url_for('bikes'))
     else:
         if request.method == "POST":
@@ -91,30 +102,31 @@ def login():
             if user_name and password:
                 conn = sqlite3.connect('Beamma-Bikes.db')
                 c = conn.cursor()
-                c.execute("SELECT password FROM users WHERE name=?",(user_name,))
-                log_password = c.fetchall()
+                c.execute("SELECT id, password FROM users WHERE name=?",(user_name,))
+                log_user = c.fetchall()
                 conn.close()
+                log_user = log_user[0]
+                log_password = log_user[1]
+                log_user_id = log_user[0]
                 if log_password:
-                    log_password = log_password[0]
-                    log_status = check_password_hash(log_password[0], password)
+                    log_status = check_password_hash(log_password, password)
                 if log_status is True:
-                    session['logstatus'] = 'true'
+                    session['logstatus'] = log_user_id
                     return redirect(url_for('user'))
                 else:
                     session['logstatus'] = 'false'
                     print("Failed")
                     return redirect(url_for('login'))
             else:
-                return render_template("login.html")
+                return render_template("login.html", logstatus = session.get('logstatus', None))
         else:
-            return render_template("login.html")
+            return render_template("login.html", logstatus = session.get('logstatus', None))
 
 @app.route("/register", methods=["GET","POST"])
 def register():
     if request.method == "POST":
         user_name = request.form.get("user_name")
         hashed_password = generate_password_hash(request.form.get("password"), salt_length=10)
-        print(hashed_password)
         conn = sqlite3.connect('Beamma-Bikes.db')
         cur = conn.cursor()
         SQL = "INSERT INTO users(name,password) VALUES(?,?)"
@@ -129,11 +141,20 @@ def register():
 
 @app.route("/user", methods=["GET", "POST"])
 def user():
-    if request.method == "POST":
-        if request.form.get("logout"):
-            session['logstatus'] = 'false'
-            return redirect(url_for('bikes'))
-    return render_template("user.html", logstatus = session.get('logstatus', None))
+    if session.get('logstatus', None) == "false":
+        return redirect(url_for("bikes"))
+    else:
+        user_id = session.get('logstatus', None)
+        conn = sqlite3.connect('Beamma-Bikes.db')
+        c = conn.cursor()
+        c.execute("SELECT bikes.name, bikes.price, cart.quantity FROM cart INNER JOIN bikes ON cart.bike_id = bikes.id WHERE user_id=?", (user_id,))
+        cart = c.fetchall()
+        conn.close()
+        if request.method == "POST":
+            if request.form.get("logout"):
+                session['logstatus'] = 'false'
+                return redirect(url_for('bikes'))
+        return render_template("user.html", logstatus = session.get('logstatus', None), user_id = user_id, cart = cart)
 
 if __name__ == "__main__":
     app.run(debug=True)

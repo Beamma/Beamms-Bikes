@@ -89,8 +89,6 @@ def login():
             user_name = request.form.get("user_name")
             password = request.form.get("password")
             if user_name and password:
-                print(user_name)
-                print(password)
                 conn = sqlite3.connect('Beamma-Bikes.db')
                 c = conn.cursor()
                 c.execute("SELECT password FROM users WHERE name=?",(user_name,))
@@ -98,7 +96,6 @@ def login():
                 conn.close()
                 if log_password:
                     log_password = log_password[0]
-                    print(log_password[0])
                     log_status = check_password_hash(log_password[0], password)
                 if log_status is True:
                     session['logstatus'] = 'true'

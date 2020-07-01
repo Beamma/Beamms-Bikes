@@ -1,16 +1,22 @@
 {% extends 'layout.html' %}
 {% block content %}
-  {{user_id}}
   <form method="POST">
-    <input type = "submit" name = "logout"></input>
+    <input type = "submit" name = "logout" value = "Logout"></input>
   </form>
   <div class = "cart">
-    {% for items in cart %}
-      <div class = "cart_items">
-        {% for bikes in items %}
-          {{bikes}}
-        {% endfor %}
-      </div>
-    {% endfor %}
+    <h1> Shopping Cart </h1>
+    <table>
+      <tr>
+        <th>Name</th>
+        <th>Price</th>
+        <th>Quantity</th>
+      </tr>
+      {% for items in cart %}
+        <tr>
+          {% for bikes in items %}
+            <td>{{bikes}}</td>
+          {% endfor %}
+        </tr>
+      {% endfor %}
   </div>
 {% endblock %}

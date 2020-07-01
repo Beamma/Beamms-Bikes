@@ -68,7 +68,7 @@ def bikes():
         conn.close()
         return render_template("bikes.html", bikes = bikes, filter_options = filter_options, logstatus = session.get('logstatus', None))
 
-@app.route("/bikes/<id>")
+@app.route("/bikes/<id>", methods=["GET", "POST"])
 def bike(id):
     logstatus = 'false'
     conn = sqlite3.connect('Beamma-Bikes.db')
@@ -77,15 +77,13 @@ def bike(id):
     bikes = c.fetchall()
     conn.close()
     if request.method == "POST":
-        quantity = 1
-        bike_id = 7
-        user_id = session.get('log_status', None)
+        user_id = session.get('logstatus', None)
         print(user_id)
         conn = sqlite3.connect('Beamma-Bikes.db')
         c = conn.cursor()
-        SQL = "INSERT INTO cart(bike_id,user_id,quantity) VALUES(?,?)"
+        SQL = "INSERT INTO cart(bike_id,user_id,quantity) VALUES(?,?,?)"
         c = conn.cursor()
-        c.execute(SQL,[bike_id, user_id, quantity])
+        c.execute(SQL,[id, user_id, 1])
         conn.commit()
         conn.close()
     return render_template("select_bike.html", bikes = bikes[0], logstatus = session.get('logstatus', None))
@@ -154,7 +152,7 @@ def user():
             if request.form.get("logout"):
                 session['logstatus'] = 'false'
                 return redirect(url_for('bikes'))
-        return render_template("user.html", logstatus = session.get('logstatus', None), user_id = user_id, cart = cart)
+        return render_template("user.html", logstatus = session.get('logstatus', None), cart = cart)
 
 if __name__ == "__main__":
     app.run(debug=True)

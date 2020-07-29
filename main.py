@@ -103,18 +103,21 @@ def login():
                 c.execute("SELECT id, password FROM users WHERE name=?",(user_name,))
                 log_user = c.fetchall()
                 conn.close()
-                log_user = log_user[0]
-                log_password = log_user[1]
-                log_user_id = log_user[0]
-                if log_password:
-                    log_status = check_password_hash(log_password, password)
-                if log_status is True:
-                    session['logstatus'] = log_user_id
-                    return redirect(url_for('user'))
+                if log_user:
+                    log_user = log_user[0]
+                    log_password = log_user[1]
+                    log_user_id = log_user[0]
+                    if log_password:
+                        log_status = check_password_hash(log_password, password)
+                    if log_status is True:
+                        session['logstatus'] = log_user_id
+                        return redirect(url_for('user'))
+                    else:
+                        session['logstatus'] = 'false'
+                        print("Failed")
+                        return redirect(url_for('login'))
                 else:
-                    session['logstatus'] = 'false'
-                    print("Failed")
-                    return redirect(url_for('login'))
+                    return render_template("login.html", logstatus = session.get('logstatus', None))
             else:
                 return render_template("login.html", logstatus = session.get('logstatus', None))
         else:
@@ -124,15 +127,18 @@ def login():
 def register():
     if request.method == "POST":
         user_name = request.form.get("user_name")
+        print(user_name)
         hashed_password = generate_password_hash(request.form.get("password"), salt_length=10)
         conn = sqlite3.connect('Beamma-Bikes.db')
         cur = conn.cursor()
         SQL = "INSERT INTO users(name,password) VALUES(?,?)"
-        cur = conn.cursor()
         cur.execute(SQL,[user_name, hashed_password])
         conn.commit()
+        cur.execute("SELECT id FROM users WHERE name=?",(user_name,))
+        user_id = cur.fetchall()
+        user_id = user_id[0]
         conn.close()
-        session['logstatus'] = "true"
+        session['logstatus'] = user_id[0]
         return redirect(url_for('user'))
     else:
         return render_template("register.html", logstatus = session.get('logstatus', None))
@@ -143,6 +149,7 @@ def user():
         return redirect(url_for("bikes"))
     else:
         user_id = session.get('logstatus', None)
+        print(user_id)
         conn = sqlite3.connect('Beamma-Bikes.db')
         c = conn.cursor()
         c.execute("SELECT bikes.name, bikes.price, cart.quantity FROM cart INNER JOIN bikes ON cart.bike_id = bikes.id WHERE user_id=?", (user_id,))

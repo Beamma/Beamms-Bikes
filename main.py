@@ -149,17 +149,25 @@ def user():
         return redirect(url_for("bikes"))
     else:
         user_id = session.get('logstatus', None)
-        print(user_id)
         conn = sqlite3.connect('Beamma-Bikes.db')
         c = conn.cursor()
         c.execute("SELECT bikes.name, bikes.price, cart.quantity FROM cart INNER JOIN bikes ON cart.bike_id = bikes.id WHERE user_id=?", (user_id,))
         cart = c.fetchall()
+        c.execute("SELECT name FROM users WHERE id=?",(user_id,))
+        name = c.fetchall()
+        name = name[0]
         conn.close()
+        price = 0
+        quantity = 0
+        for i in range(len(cart)):
+            bike = cart[i]
+            price += bike[1]
+            quantity += bike[2]
         if request.method == "POST":
             if request.form.get("logout"):
                 session['logstatus'] = 'false'
                 return redirect(url_for('bikes'))
-        return render_template("user.html", logstatus = session.get('logstatus', None), cart = cart)
+        return render_template("user.html", logstatus = session.get('logstatus', None), cart = cart, name = name[0], price = price, quantity = quantity)
 
 if __name__ == "__main__":
     app.run(debug=True)

@@ -3,11 +3,12 @@
   <form method="POST">
     <input type = "submit" name = "logout" value = "Logout"></input>
   </form>
+  {{ name }}
   <div class = "cart">
     <table>
       <tr>
         <th>Name</th>
-        <th>Price</th>
+        <th>Price ($)</th>
         <th>Quantity</th>
       </tr>
       {% for items in cart %}
@@ -17,5 +18,11 @@
           {% endfor %}
         </tr>
       {% endfor %}
+        <tr>
+          <th>TOTAL:</th>
+          <th>${{ price }}</th>
+          <th>{{ quantity }}</th>
+        </tr>
+      </table>
   </div>
 {% endblock %}

@@ -4,6 +4,7 @@
     <input type = "submit" name = "logout" value = "Logout"></input>
   </form>
   {{ name }}
+  <form method="POST">
   <div class = "cart">
     <table>
       <tr>
@@ -12,17 +13,22 @@
         <th>Quantity</th>
       </tr>
       {% for items in cart %}
-        <tr>
-          {% for bikes in items %}
-            <td>{{bikes}}</td>
-          {% endfor %}
-        </tr>
+      <tr>
+        <td>
+          {{items[0]}}
+        </td>
+        <td>
+          {{items[1]}}
+        </td>
+          <td><input type = "number" name = {{items[3]}} value = {{items[2]}} ></input</td>
       {% endfor %}
+      </tr>
         <tr>
           <th>TOTAL:</th>
           <th>${{ price }}</th>
-          <th>{{ quantity }}</th>
+          <th>{{ quantity }}<input type ="submit" value = "Change Quantity"></input></th>
         </tr>
       </table>
+      </form>
   </div>
 {% endblock %}

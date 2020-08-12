@@ -151,7 +151,7 @@ def user():
         user_id = session.get('logstatus', None)
         conn = sqlite3.connect('Beamma-Bikes.db')
         c = conn.cursor()
-        c.execute("SELECT bikes.name, bikes.price, cart.quantity, cart.bike_id FROM cart INNER JOIN bikes ON cart.bike_id = bikes.id WHERE user_id=?", (user_id,))
+        c.execute("SELECT bikes.name, bikes.price, cart.quantity, cart.id FROM cart INNER JOIN bikes ON cart.bike_id = bikes.id WHERE user_id=?", (user_id,))
         cart = c.fetchall()
         c.execute("SELECT name FROM users WHERE id=?",(user_id,))
         name = c.fetchall()
@@ -169,10 +169,15 @@ def user():
                 return redirect(url_for('bikes'))
             else:
                 for i in range(len(cart)):
-                    bike_id = cart[i]
-                    bike_quantity = request.form.get(bike_id[3])
-                    print(bike_id)
-                    print(bike_quantity)
+                    cart_id = cart[i]
+                    bike_quantity = request.form.get(str(cart_id[3]))
+                    print(cart_id[3], bike_quantity)
+                    conn = sqlite3.connect('Beamma-Bikes.db')
+                    c = conn.cursor()
+                    c.execute("UPDATE cart SET quantity = ? WHERE id = ?",(bike_quantity, cart_id[3],))
+                    conn.commit()
+                    conn.close()
+                return(redirect(url_for("user")))
         return render_template("user.html", logstatus = session.get('logstatus', None), cart = cart, name = name[0], price = price, quantity = quantity)
 
 if __name__ == "__main__":

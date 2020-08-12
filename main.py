@@ -161,7 +161,14 @@ def user():
         quantity = 0
         for i in range(len(cart)):
             bike = cart[i]
-            price += bike[1]
+            price += bike[1] * bike[2]
+            if bike[2] < 1:
+                conn = sqlite3.connect('Beamma-Bikes.db')
+                c = conn.cursor()
+                c.execute("DELETE FROM cart WHERE id = ?",(bike[3],))
+                conn.commit()
+                conn.close()
+                return redirect(url_for("user"))
             quantity += bike[2]
         if request.method == "POST":
             if request.form.get("logout"):

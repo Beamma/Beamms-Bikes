@@ -68,7 +68,7 @@ def bikes():
         conn.close()
         return render_template("bikes.html", bikes = bikes, filter_options = filter_options, logstatus = session.get('logstatus', None))
 
-@app.route("/bikes/<id>", methods=["GET", "POST"])
+@app.route("/bikes/<int:id>", methods=["GET", "POST"])
 def bike(id):
     logstatus = 'false'
     conn = sqlite3.connect('Beamma-Bikes.db')
@@ -77,15 +77,28 @@ def bike(id):
     bikes = c.fetchall()
     conn.close()
     if request.method == "POST":
+        quantity = int(request.form.get("quantity"))
         user_id = session.get('logstatus', None)
-        print(user_id)
         conn = sqlite3.connect('Beamma-Bikes.db')
         c = conn.cursor()
-        SQL = "INSERT INTO cart(bike_id,user_id,quantity) VALUES(?,?,?)"
-        c = conn.cursor()
-        c.execute(SQL,[id, user_id, 1])
+        cart = c.execute("SELECT cart.bike_id, cart.user_id, cart.quantity FROM cart")
+        cart = cart.fetchall()
+        for cart_item in cart:
+            if cart_item[0] == id and cart_item[1] == user_id:
+                bike_quantity = cart_item[2] + quantity
+                print("HERE!")
+                c = conn.cursor()
+                c.execute("UPDATE cart SET quantity = ? WHERE cart.bike_id = ? AND cart.user_id = ?",(bike_quantity, id, user_id,))
+                conn.commit()
+                break
+        else:
+            SQL = "INSERT INTO cart(bike_id,user_id,quantity) VALUES(?,?,?)"
+            c = conn.cursor()
+            c.execute(SQL,[id, user_id, quantity])
         conn.commit()
         conn.close()
+
+        return redirect(request.full_path)
     return render_template("select_bike.html", bikes = bikes[0], logstatus = session.get('logstatus', None))
 
 @app.route("/login", methods=["GET","POST"])
@@ -151,7 +164,7 @@ def user():
         user_id = session.get('logstatus', None)
         conn = sqlite3.connect('Beamma-Bikes.db')
         c = conn.cursor()
-        c.execute("SELECT bikes.name, bikes.price, cart.quantity, cart.id FROM cart INNER JOIN bikes ON cart.bike_id = bikes.id WHERE user_id=?", (user_id,))
+        c.execute("SELECT bikes.name, bikes.price, cart.quantity, cart.id, cart.user_id FROM cart INNER JOIN bikes ON cart.bike_id = bikes.id WHERE user_id=?", (user_id,))
         cart = c.fetchall()
         c.execute("SELECT name FROM users WHERE id=?",(user_id,))
         name = c.fetchall()
@@ -161,6 +174,7 @@ def user():
         quantity = 0
         for i in range(len(cart)):
             bike = cart[i]
+            quantity += bike[2]
             price += bike[1] * bike[2]
             if bike[2] < 1:
                 conn = sqlite3.connect('Beamma-Bikes.db')
@@ -169,7 +183,7 @@ def user():
                 conn.commit()
                 conn.close()
                 return redirect(url_for("user"))
-            quantity += bike[2]
+        # quantity += bike[2]
         if request.method == "POST":
             if request.form.get("logout"):
                 session['logstatus'] = 'false'
@@ -178,12 +192,20 @@ def user():
                 for i in range(len(cart)):
                     cart_id = cart[i]
                     bike_quantity = request.form.get(str(cart_id[3]))
-                    print(cart_id[3], bike_quantity)
                     conn = sqlite3.connect('Beamma-Bikes.db')
                     c = conn.cursor()
                     c.execute("UPDATE cart SET quantity = ? WHERE id = ?",(bike_quantity, cart_id[3],))
                     conn.commit()
                     conn.close()
+                # for i in range(len(cart)):
+                #     cart_id=cart[i]
+                #     # if request.form.get("a", cart_id[3]) is not None:
+                #     print(request.form.get("a", str(cart_id[3])),)
+                        # conn = sqlite3.connect('Beamma-Bikes.db')
+                        # c = conn.cursor()
+                        # c.execute("DELETE FROM cart WHERE id = ?",(str(cart_id[3]),))
+                        # conn.commit()
+                        # conn.close()
                 return(redirect(url_for("user")))
         return render_template("user.html", logstatus = session.get('logstatus', None), cart = cart, name = name[0], price = price, quantity = quantity)
 

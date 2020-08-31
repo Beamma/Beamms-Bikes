@@ -71,34 +71,39 @@ def bikes():
 @app.route("/bikes/<int:id>", methods=["GET", "POST"])
 def bike(id):
     logstatus = 'false'
+    status = ""
     conn = sqlite3.connect('Beamma-Bikes.db')
     c = conn.cursor()
     c.execute("SELECT bikes.name, bikes.image, bikes.price, bikes.description, brand.name FROM bikes INNER JOIN brand ON bikes.brand = brand.id WHERE bikes.id=?", (id,))
     bikes = c.fetchall()
     conn.close()
     if request.method == "POST":
-        quantity = int(request.form.get("quantity"))
-        user_id = session.get('logstatus', None)
-        conn = sqlite3.connect('Beamma-Bikes.db')
-        c = conn.cursor()
-        cart = c.execute("SELECT cart.bike_id, cart.user_id, cart.quantity FROM cart")
-        cart = cart.fetchall()
-        for cart_item in cart:
-            if cart_item[0] == id and cart_item[1] == user_id:
-                bike_quantity = cart_item[2] + quantity
-                print("HERE!")
-                c = conn.cursor()
-                c.execute("UPDATE cart SET quantity = ? WHERE cart.bike_id = ? AND cart.user_id = ?",(bike_quantity, id, user_id,))
-                conn.commit()
-                break
-        else:
-            SQL = "INSERT INTO cart(bike_id,user_id,quantity) VALUES(?,?,?)"
+        if session.get('logstatus', None) != "false":
+            quantity = int(request.form.get("quantity"))
+            user_id = session.get('logstatus', None)
+            conn = sqlite3.connect('Beamma-Bikes.db')
             c = conn.cursor()
-            c.execute(SQL,[id, user_id, quantity])
-        conn.commit()
-        conn.close()
-
-        return redirect(request.full_path)
+            cart = c.execute("SELECT cart.bike_id, cart.user_id, cart.quantity FROM cart")
+            cart = cart.fetchall()
+            for cart_item in cart:
+                if cart_item[0] == id and cart_item[1] == user_id:
+                    bike_quantity = cart_item[2] + quantity
+                    c = conn.cursor()
+                    c.execute("UPDATE cart SET quantity = ? WHERE cart.bike_id = ? AND cart.user_id = ?",(bike_quantity, id, user_id,))
+                    conn.commit()
+                    status = "Worked"
+                    break
+            else:
+                SQL = "INSERT INTO cart(bike_id,user_id,quantity) VALUES(?,?,?)"
+                c = conn.cursor()
+                c.execute(SQL,[id, user_id, quantity])
+            conn.commit()
+            conn.close()
+            status = "Worked"
+            return render_template("select_bike.html", bikes = bikes[0], logstatus = session.get('logstatus', None), status = status)
+        else:
+            status = "Failed"
+            return render_template("select_bike.html", bikes = bikes[0], logstatus = session.get('logstatus', None), status = status)
     return render_template("select_bike.html", bikes = bikes[0], logstatus = session.get('logstatus', None))
 
 @app.route("/login", methods=["GET","POST"])

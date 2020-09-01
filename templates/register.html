@@ -4,6 +4,10 @@
   <form method="POST">
     <input type="text" name="user_name" value="Username"></input>
     <input type="password" name="password" value="Password"></input>
+    <input type="email" name="email" value="Example@Gmail.com"</input>
     <input type="submit">Submit</input>
   </form>
+  <div class = "register_status">
+    {{ status }}
+  </div>
 {% endblock %}

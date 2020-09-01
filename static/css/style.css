@@ -147,3 +147,8 @@ td, th {
 tr:nth-child(even) {
   background-color: #dddddd;
 }
+
+.register_status {
+  font-family: 'Rubik', sans-serif;
+  color: red;
+}

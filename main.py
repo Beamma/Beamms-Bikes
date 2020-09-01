@@ -149,18 +149,29 @@ def login():
 def register():
     if request.method == "POST":
         user_name = request.form.get("user_name")
-        print(user_name)
         hashed_password = generate_password_hash(request.form.get("password"), salt_length=10)
+        email = request.form.get("email")
         conn = sqlite3.connect('Beamma-Bikes.db')
         cur = conn.cursor()
-        SQL = "INSERT INTO users(name,password) VALUES(?,?)"
-        cur.execute(SQL,[user_name, hashed_password])
+        cur.execute("SELECT name, email FROM users")
+        existing_info = cur.fetchall()
+        for user_info in existing_info:
+            if user_name == user_info[0]:
+                status = "Username Already In Use"
+                return render_template("register.html", logstatus = session.get('logstatus', None), status = status)
+            if email == user_info[1]:
+                status = "Email Already In Use"
+                return render_template("register.html", logstatus = session.get('logstatus', None), status = status)
+        status = ""
+        SQL = "INSERT INTO users(name,password,email) VALUES(?,?,?)"
+        cur.execute(SQL,[user_name, hashed_password, email])
         conn.commit()
         cur.execute("SELECT id FROM users WHERE name=?",(user_name,))
         user_id = cur.fetchall()
-        user_id = user_id[0]
         conn.close()
+        user_id = user_id[0]
         session['logstatus'] = user_id[0]
+
         return redirect(url_for('user'))
     else:
         return render_template("register.html", logstatus = session.get('logstatus', None))

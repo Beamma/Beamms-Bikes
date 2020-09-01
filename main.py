@@ -76,35 +76,39 @@ def bike(id):
     c = conn.cursor()
     c.execute("SELECT bikes.name, bikes.image, bikes.price, bikes.description, brand.name FROM bikes INNER JOIN brand ON bikes.brand = brand.id WHERE bikes.id=?", (id,))
     bikes = c.fetchall()
+    c.execute ("SELECT sizes.size, sizes.id FROM bikes_sizes INNER JOIN sizes ON sid = id WHERE bid = ?", (id,))
+    bike_sizes = c.fetchall()
     conn.close()
+
     if request.method == "POST":
         if session.get('logstatus', None) != "false":
             quantity = int(request.form.get("quantity"))
+            size = int(request.form.get("size"))
             user_id = session.get('logstatus', None)
             conn = sqlite3.connect('Beamma-Bikes.db')
             c = conn.cursor()
-            cart = c.execute("SELECT cart.bike_id, cart.user_id, cart.quantity FROM cart")
+            cart = c.execute("SELECT cart.bike_id, cart.user_id, cart.quantity, cart.size FROM cart")
             cart = cart.fetchall()
             for cart_item in cart:
-                if cart_item[0] == id and cart_item[1] == user_id:
+                if cart_item[0] == id and cart_item[1] == user_id and cart_item[3] == size:
                     bike_quantity = cart_item[2] + quantity
                     c = conn.cursor()
-                    c.execute("UPDATE cart SET quantity = ? WHERE cart.bike_id = ? AND cart.user_id = ?",(bike_quantity, id, user_id,))
+                    c.execute("UPDATE cart SET quantity = ? WHERE cart.bike_id = ? AND cart.user_id = ? AND cart.size = ?",(bike_quantity, id, user_id, size,))
                     conn.commit()
                     status = "Worked"
                     break
             else:
-                SQL = "INSERT INTO cart(bike_id,user_id,quantity) VALUES(?,?,?)"
+                SQL = "INSERT INTO cart(bike_id,user_id,quantity,size) VALUES(?,?,?,?)"
                 c = conn.cursor()
-                c.execute(SQL,[id, user_id, quantity])
+                c.execute(SQL,[id, user_id, quantity,size])
             conn.commit()
             conn.close()
             status = "Worked"
-            return render_template("select_bike.html", bikes = bikes[0], logstatus = session.get('logstatus', None), status = status)
+            return render_template("select_bike.html", bikes = bikes[0], logstatus = session.get('logstatus', None), status = status, bike_sizes = bike_sizes)
         else:
             status = "Failed"
-            return render_template("select_bike.html", bikes = bikes[0], logstatus = session.get('logstatus', None), status = status)
-    return render_template("select_bike.html", bikes = bikes[0], logstatus = session.get('logstatus', None))
+            return render_template("select_bike.html", bikes = bikes[0], logstatus = session.get('logstatus', None), status = status, bike_sizes = bike_sizes)
+    return render_template("select_bike.html", bikes = bikes[0], logstatus = session.get('logstatus', None),bike_sizes = bike_sizes)
 
 @app.route("/login", methods=["GET","POST"])
 def login():
@@ -169,7 +173,7 @@ def user():
         user_id = session.get('logstatus', None)
         conn = sqlite3.connect('Beamma-Bikes.db')
         c = conn.cursor()
-        c.execute("SELECT bikes.name, bikes.price, cart.quantity, cart.id, cart.user_id FROM cart INNER JOIN bikes ON cart.bike_id = bikes.id WHERE user_id=?", (user_id,))
+        c.execute("SELECT bikes.name, bikes.price, cart.quantity, cart.id, cart.user_id, sizes.size FROM cart INNER JOIN bikes ON cart.bike_id = bikes.id INNER JOIN sizes ON cart.size = sizes.id WHERE user_id=?", (user_id,))
         cart = c.fetchall()
         c.execute("SELECT name FROM users WHERE id=?",(user_id,))
         name = c.fetchall()
@@ -202,15 +206,6 @@ def user():
                     c.execute("UPDATE cart SET quantity = ? WHERE id = ?",(bike_quantity, cart_id[3],))
                     conn.commit()
                     conn.close()
-                # for i in range(len(cart)):
-                #     cart_id=cart[i]
-                #     # if request.form.get("a", cart_id[3]) is not None:
-                #     print(request.form.get("a", str(cart_id[3])),)
-                        # conn = sqlite3.connect('Beamma-Bikes.db')
-                        # c = conn.cursor()
-                        # c.execute("DELETE FROM cart WHERE id = ?",(str(cart_id[3]),))
-                        # conn.commit()
-                        # conn.close()
                 return(redirect(url_for("user")))
         return render_template("user.html", logstatus = session.get('logstatus', None), cart = cart, name = name[0], price = price, quantity = quantity)
 

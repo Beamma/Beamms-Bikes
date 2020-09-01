@@ -17,13 +17,18 @@
       </div>
       <div class = "add_cart">
         <form method="POST">
+          <select name = "size" id = "sizes">
+            {% for sizes in bike_sizes %}
+              <option name="sizes" value = "{{ sizes[1] }}">{{ sizes[0]}}</option>
+            {% endfor %}
+          </select>
           <input type = "number" name = "quantity" value = "1"></input>
           <input type = "submit" value = "Add To Cart">
         </form>
       </div>
       <div class = "status">
         {% if status == "Worked": %}
-          <p style="color:green;">Added To Cart</p>
+          <p style="color:rgb(18 216 18);">Added To Cart</p>
         {% endif %}
         {% if status == "Failed": %}
           <p style="color:red;">Failed, Pleases Log In</p>

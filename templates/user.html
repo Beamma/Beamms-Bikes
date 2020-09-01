@@ -10,22 +10,27 @@
       <tr>
         <th>Name</th>
         <th>Price ($)</th>
+        <th>Size</th>
         <th>Quantity</th>
       </tr>
       {% for items in cart %}
       <tr>
         <td>
-          {{items[0]}}
+          {{ items[0] }}
         </td>
         <td>
-          {{items[1]}}
+          {{ items[1] }}
         </td>
-          <td><input type = "number" name = {{items[3]}} value = {{items[2]}} ></input><input type="checkbox" name="a{{items[3]}}" value="Remove"></input></td>
+        <td>
+          {{ items[5] }}
+        </td>
+          <td><input type = "number" name = {{ items[3] }} value = {{ items[2] }} ></input><input type="checkbox" name="a{{ items[3] }}" value="Remove"></input></td>
       {% endfor %}
       </tr>
         <tr>
           <th>TOTAL:</th>
           <th>${{ price }}</th>
+          <th></th>
           <th>{{ quantity }}<input type ="submit" value = "Change Quantity"></input></th>
         </tr>
       </table>

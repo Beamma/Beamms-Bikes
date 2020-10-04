@@ -33,6 +33,12 @@
         {% if status == "Failed": %}
           <p style="color:red;">Failed, Pleases Log In</p>
         {% endif %}
+        {% if status == "Low_Stock": %}
+          <p style="color:red;">Failed, Not Enough Stock For Selected Quantity</p>
+        {% endif %}
+        {% if status == "OOS": %}
+          <p style="color:red;">Failed, Out Of Stock</p>
+        {% endif %}
       </div>
       <div class = "description">
         {{ bikes [3] }}

@@ -87,13 +87,20 @@ def bike(id):
             conn = sqlite3.connect('Beamma-Bikes.db')
             c = conn.cursor()
 
-            #Change quantity Accordingly
+            # Select Shop Quantity For Bike
             c.execute("SELECT bikes_sizes.quantity FROM bikes_sizes WHERE bid = ? AND sid = ?", (id, size,))
             shop_quantity = c.fetchall()[0]
             shop_quantity = int(shop_quantity[0])
-            print("shop_quantity:", shop_quantity)
+
+            # Check If Quantity Is Sufficiant
+            if shop_quantity == 0:
+                status = "OOS"
+                return render_template("select_bike.html", bikes = bikes[0], logstatus = session.get('logstatus', None), status = status, bike_sizes = bike_sizes)
+            if shop_quantity < quantity:
+                status = "Low_Stock"
+                return render_template("select_bike.html", bikes = bikes[0], logstatus = session.get('logstatus', None), status = status, bike_sizes = bike_sizes)
+            # Update Shop Quantity
             new_shop_quantity = shop_quantity - quantity
-            print("new_shop_quantity:", new_shop_quantity)
             c.execute("UPDATE bikes_sizes SET quantity = ? WHERE bikes_sizes.bid = ? AND bikes_sizes.sid = ?", (new_shop_quantity, id, size,))
             conn.commit()
 

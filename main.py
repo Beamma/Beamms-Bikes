@@ -47,7 +47,6 @@ def bikes():
             query += " WHERE " + " AND ".join(filters)
         query += request.form.getlist("sort")[0]
 
-        print(query, parms)
 
 		# Execute Query
         conn = sqlite3.connect('Beamma-Bikes.db')
@@ -87,19 +86,28 @@ def bike(id):
             user_id = session.get('logstatus', None)
             conn = sqlite3.connect('Beamma-Bikes.db')
             c = conn.cursor()
+
+            #Change quantity Accordingly
+            c.execute("SELECT bikes_sizes.quantity FROM bikes_sizes WHERE bid = ? AND sid = ?", (id, size,))
+            shop_quantity = c.fetchall()[0]
+            shop_quantity = int(shop_quantity[0])
+            print("shop_quantity:", shop_quantity)
+            new_shop_quantity = shop_quantity - quantity
+            print("new_shop_quantity:", new_shop_quantity)
+            c.execute("UPDATE bikes_sizes SET quantity = ? WHERE bikes_sizes.bid = ? AND bikes_sizes.sid = ?", (new_shop_quantity, id, size,))
+            conn.commit()
+
             cart = c.execute("SELECT cart.bike_id, cart.user_id, cart.quantity, cart.size FROM cart")
             cart = cart.fetchall()
             for cart_item in cart:
                 if cart_item[0] == id and cart_item[1] == user_id and cart_item[3] == size:
                     bike_quantity = cart_item[2] + quantity
-                    c = conn.cursor()
                     c.execute("UPDATE cart SET quantity = ? WHERE cart.bike_id = ? AND cart.user_id = ? AND cart.size = ?",(bike_quantity, id, user_id, size,))
                     conn.commit()
                     status = "Worked"
                     break
             else:
                 SQL = "INSERT INTO cart(bike_id,user_id,quantity,size) VALUES(?,?,?,?)"
-                c = conn.cursor()
                 c.execute(SQL,[id, user_id, quantity,size])
             conn.commit()
             conn.close()
@@ -148,6 +156,7 @@ def login():
 @app.route("/register", methods=["GET","POST"])
 def register():
     if request.method == "POST":
+        session['logstatus'] = 'false'
         user_name = request.form.get("user_name")
         hashed_password = generate_password_hash(request.form.get("password"), salt_length=10)
         email = request.form.get("email")
@@ -158,9 +167,11 @@ def register():
         for user_info in existing_info:
             if user_name == user_info[0]:
                 status = "Username Already In Use"
+                session['logstatus'] = 'false'
                 return render_template("register.html", logstatus = session.get('logstatus', None), status = status)
             if email == user_info[1]:
                 status = "Email Already In Use"
+                session['logstatus'] = 'false'
                 return render_template("register.html", logstatus = session.get('logstatus', None), status = status)
         status = ""
         SQL = "INSERT INTO users(name,password,email) VALUES(?,?,?)"
@@ -182,6 +193,7 @@ def user():
         return redirect(url_for("bikes"))
     else:
         user_id = session.get('logstatus', None)
+        print(user_id)
         conn = sqlite3.connect('Beamma-Bikes.db')
         c = conn.cursor()
         c.execute("SELECT bikes.name, bikes.price, cart.quantity, cart.id, cart.user_id, sizes.size FROM cart INNER JOIN bikes ON cart.bike_id = bikes.id INNER JOIN sizes ON cart.size = sizes.id WHERE user_id=?", (user_id,))

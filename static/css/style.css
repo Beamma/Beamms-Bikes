@@ -76,13 +76,20 @@ nav a {
   width: 200px;
   margin: 10px;
   float: left;
-  height: 200px;
+  height: 250px;
   text-align: center;
+  font-family: "Roboto", sans-serif;
 }
 
 .bikes img {
   width: 180px;
   height: 180px;
+}
+
+.bikes a {
+  text-decoration: none;
+  color: black;
+  font-size: 150%;
 }
 
 .content .bike_left {

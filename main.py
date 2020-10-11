@@ -10,7 +10,7 @@ app.config['SECRET_KEY'] = 'super secret key'
 @app.route('/')
 def home():
     logstatus = 'false'
-    return render_template("home.html", logstatus = session.get('logstatus', None))
+    return render_template("home.html", logstatus = session.get('logstatus', None), adminstatus = session.get('adminstatus', None))
 
 # Bikes Page
 @app.route('/bikes', methods=["GET","POST"])
@@ -66,7 +66,7 @@ def bikes():
             c.execute(query, parms)
             bikes = c.fetchall()
             conn.close()
-        return render_template("bikes.html", bikes = bikes, filter_options = filter_options, logstatus = session.get('logstatus', None))
+        return render_template("bikes.html", bikes = bikes, filter_options = filter_options, logstatus = session.get('logstatus', None), adminstatus = session.get('adminstatus', None))
 
 	# Normal Page Loading
     else:
@@ -77,7 +77,7 @@ def bikes():
         c.execute("SELECT name, image, id FROM Bikes")
         bikes = c.fetchall()
         conn.close()
-        return render_template("bikes.html", bikes = bikes, filter_options = filter_options, logstatus = session.get('logstatus', None))
+        return render_template("bikes.html", bikes = bikes, filter_options = filter_options, logstatus = session.get('logstatus', None), adminstatus = session.get('adminstatus', None))
 
 @app.route("/bikes/<int:id>", methods=["GET", "POST"])
 def bike(id):
@@ -107,10 +107,10 @@ def bike(id):
             # Check If Quantity Is Sufficiant
             if shop_quantity == 0:
                 status = "OOS"
-                return render_template("select_bike.html", bikes = bikes[0], logstatus = session.get('logstatus', None), status = status, bike_sizes = bike_sizes)
+                return render_template("select_bike.html", bikes = bikes[0], logstatus = session.get('logstatus', None), status = status, bike_sizes = bike_sizes, adminstatus = session.get('adminstatus', None))
             if shop_quantity < quantity:
                 status = "Low_Stock"
-                return render_template("select_bike.html", bikes = bikes[0], logstatus = session.get('logstatus', None), status = status, bike_sizes = bike_sizes)
+                return render_template("select_bike.html", bikes = bikes[0], logstatus = session.get('logstatus', None), status = status, bike_sizes = bike_sizes, adminstatus = session.get('adminstatus', None))
             # Update Shop Quantity
             new_shop_quantity = shop_quantity - quantity
             c.execute("UPDATE bikes_sizes SET quantity = ? WHERE bikes_sizes.bid = ? AND bikes_sizes.sid = ?", (new_shop_quantity, id, size,))
@@ -131,11 +131,11 @@ def bike(id):
             conn.commit()
             conn.close()
             status = "Worked"
-            return render_template("select_bike.html", bikes = bikes[0], logstatus = session.get('logstatus', None), status = status, bike_sizes = bike_sizes)
+            return render_template("select_bike.html", bikes = bikes[0], logstatus = session.get('logstatus', None), status = status, bike_sizes = bike_sizes, adminstatus = session.get('adminstatus', None))
         else:
             status = "Failed"
-            return render_template("select_bike.html", bikes = bikes[0], logstatus = session.get('logstatus', None), status = status, bike_sizes = bike_sizes)
-    return render_template("select_bike.html", bikes = bikes[0], logstatus = session.get('logstatus', None),bike_sizes = bike_sizes)
+            return render_template("select_bike.html", bikes = bikes[0], logstatus = session.get('logstatus', None), status = status, bike_sizes = bike_sizes, adminstatus = session.get('adminstatus', None))
+    return render_template("select_bike.html", bikes = bikes[0], logstatus = session.get('logstatus', None),bike_sizes = bike_sizes, adminstatus = session.get('adminstatus', None))
 
 @app.route("/login", methods=["GET","POST"])
 def login():
@@ -149,28 +149,30 @@ def login():
             if user_name and password:
                 conn = sqlite3.connect('Beamma-Bikes.db')
                 c = conn.cursor()
-                c.execute("SELECT id, password FROM users WHERE name=?",(user_name,))
+                c.execute("SELECT id, password, admin FROM users WHERE name=?",(user_name,))
                 log_user = c.fetchall()
                 conn.close()
                 if log_user:
                     log_user = log_user[0]
                     log_password = log_user[1]
                     log_user_id = log_user[0]
+                    log_admin = log_user[2]
                     if log_password:
                         log_status = check_password_hash(log_password, password)
                     if log_status is True:
                         session['logstatus'] = log_user_id
+                        session['adminstatus'] =  log_admin
                         return redirect(url_for('user'))
                     else:
                         session['logstatus'] = 'false'
                         print("Failed")
                         return redirect(url_for('login'))
                 else:
-                    return render_template("login.html", logstatus = session.get('logstatus', None))
+                    return render_template("login.html", logstatus = session.get('logstatus', None), adminstatus = session.get('adminstatus', None))
             else:
-                return render_template("login.html", logstatus = session.get('logstatus', None))
+                return render_template("login.html", logstatus = session.get('logstatus', None), adminstatus = session.get('adminstatus', None))
         else:
-            return render_template("login.html", logstatus = session.get('logstatus', None))
+            return render_template("login.html", logstatus = session.get('logstatus', None), adminstatus = session.get('adminstatus', None))
 
 @app.route("/register", methods=["GET","POST"])
 def register():
@@ -187,11 +189,11 @@ def register():
             if user_name == user_info[0]:
                 status = "Username Already In Use"
                 session['logstatus'] = 'false'
-                return render_template("register.html", logstatus = session.get('logstatus', None), status = status)
+                return render_template("register.html", logstatus = session.get('logstatus', None), status = status, adminstatus = session.get('adminstatus', None))
             if email == user_info[1]:
                 status = "Email Already In Use"
                 session['logstatus'] = 'false'
-                return render_template("register.html", logstatus = session.get('logstatus', None), status = status)
+                return render_template("register.html", logstatus = session.get('logstatus', None), status = status, adminstatus = session.get('adminstatus', None))
         status = ""
         SQL = "INSERT INTO users(name,password,email) VALUES(?,?,?)"
         cur.execute(SQL,[user_name, hashed_password, email])
@@ -204,7 +206,7 @@ def register():
 
         return redirect(url_for('user'))
     else:
-        return render_template("register.html", logstatus = session.get('logstatus', None))
+        return render_template("register.html", logstatus = session.get('logstatus', None), adminstatus = session.get('adminstatus', None))
 
 @app.route("/user", methods=["GET", "POST"])
 def user():
@@ -237,6 +239,7 @@ def user():
         if request.method == "POST":
             if request.form.get("logout"):
                 session['logstatus'] = 'false'
+                session['adminstatus'] = 0
                 return redirect(url_for('bikes'))
             else:
                 for i in range(len(cart)):
@@ -248,7 +251,30 @@ def user():
                     conn.commit()
                     conn.close()
                 return(redirect(url_for("user")))
-        return render_template("user.html", logstatus = session.get('logstatus', None), cart = cart, name = name[0], price = price, quantity = quantity)
+        return render_template("user.html", logstatus = session.get('logstatus', None), cart = cart, name = name[0], price = price, quantity = quantity, adminstatus = session.get('adminstatus', None))
+
+@app.route("/admin", methods=["GET", "POST"])
+def admin():
+    if session.get('logstatus', None) == "false":
+        return redirect(url_for("bikes"))
+    else:
+        user_id = session.get('logstatus', None)
+
+        conn = sqlite3.connect('Beamma-Bikes.db')
+        c = conn.cursor()
+        c.execute("SELECT name, admin FROM users WHERE id=?", (user_id,))
+        user_admin = c.fetchall()
+        conn.commit()
+        conn.close()
+
+        user_admin  = user_admin [0]
+        user_name = user_admin[0]
+        user_admin  = user_admin[1]
+        if user_admin == 1:
+            return render_template("admin.html", name = user_name, logstatus = session.get('logstatus', None), adminstatus = session.get('adminstatus', None))
+        else:
+            return redirect(url_for("home"))
+
 
 if __name__ == "__main__":
     app.run(debug=True)

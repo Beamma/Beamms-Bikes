@@ -35,9 +35,12 @@ def bikes():
         query = "SELECT DISTINCT bikes.name, bikes.image, bikes.id FROM bikes INNER JOIN bikes_sizes ON bikes_sizes.bid = bikes.id "
         parms = []
         filters = []
+        search = request.form.get("search")
+        print("search:", search)
 
         # Build Query
         for key in request.form:
+            if key == "search": continue
             if key == "sort": continue # Ignore Sort
             values = request.form.getlist(key)
             column = "bikes_sizes." + key if key == "sid" else 'bikes.' + key
@@ -47,13 +50,22 @@ def bikes():
             query += " WHERE " + " AND ".join(filters)
         query += request.form.getlist("sort")[0]
 
-
-		# Execute Query
         conn = sqlite3.connect('Beamma-Bikes.db')
         c = conn.cursor()
-        c.execute(query, parms)
-        bikes = c.fetchall()
-        conn.close()
+
+        if search != "":
+            print("search")
+            query = "SELECT DISTINCT bikes.name, bikes.image, bikes.id FROM bikes WHERE bikes.name LIKE '%" + search + "%' "
+            c.execute(query)
+            bikes = c.fetchall()
+            conn.close()
+
+        # Execute Query
+        else:
+            print("filter")
+            c.execute(query, parms)
+            bikes = c.fetchall()
+            conn.close()
         return render_template("bikes.html", bikes = bikes, filter_options = filter_options, logstatus = session.get('logstatus', None))
 
 	# Normal Page Loading
@@ -200,7 +212,6 @@ def user():
         return redirect(url_for("bikes"))
     else:
         user_id = session.get('logstatus', None)
-        print(user_id)
         conn = sqlite3.connect('Beamma-Bikes.db')
         c = conn.cursor()
         c.execute("SELECT bikes.name, bikes.price, cart.quantity, cart.id, cart.user_id, sizes.size FROM cart INNER JOIN bikes ON cart.bike_id = bikes.id INNER JOIN sizes ON cart.size = sizes.id WHERE user_id=?", (user_id,))

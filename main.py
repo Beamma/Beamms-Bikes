@@ -271,7 +271,25 @@ def admin():
         user_name = user_admin[0]
         user_admin  = user_admin[1]
         if user_admin == 1:
-            return render_template("admin.html", name = user_name, logstatus = session.get('logstatus', None), adminstatus = session.get('adminstatus', None))
+            conn = sqlite3.connect('Beamma-Bikes.db')
+            c = conn.cursor()
+            c.execute("SELECT id, name FROM brand")
+            brands = c.fetchall()
+            c.execute("SELECT id, name FROM type")
+            types = c.fetchall()
+            c.execute("SELECT id, size FROM wheel_sizes")
+            wheels = c.fetchall()
+            c.execute("SELECT id, gender FROM genders")
+            genders = c.fetchall()
+            c.execute("SELECT id, size FROM sizes")
+            sizes = c.fetchall()
+            conn.commit()
+            conn.close()
+            if request.method == "POST":
+                return render_template("admin.html", name = user_name, logstatus = session.get('logstatus', None), adminstatus = session.get('adminstatus', None), brands = brands, types = types, wheels = wheels, genders = genders, sizes = sizes)
+            else:
+                return render_template("admin.html", name = user_name, logstatus = session.get('logstatus', None), adminstatus = session.get('adminstatus', None), brands = brands, types = types, wheels = wheels, genders = genders, sizes = sizes)
+
         else:
             return redirect(url_for("home"))
 

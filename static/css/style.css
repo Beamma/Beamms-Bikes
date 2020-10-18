@@ -30,9 +30,10 @@ html, body{
 }
 
 .whole .title p {
-  font-family: "Roboto", sans-serif;
+  font-family: "Teko", sans-serif;
   font-size: 500%;
   text-align: center;
+  color: white;
 }
 
 nav a:hover {

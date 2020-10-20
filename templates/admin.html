@@ -32,6 +32,14 @@
         {{ size[1] }}:<input type="number" name="{{ size[0] }}" value="10"></input>
       {% endfor %}
     </div>
-    <input type = "submit">Submit</input>
+    <div class = "delete">
+      <select name = "delete">
+        <option name = "default" value = "default">SELECT A BIKE</option>
+        {% for bike in bikes %}
+          <option name = "{{ bike[0] }}" value = "{{ bike[0] }}">{{ bike[1] }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <input type = "submit"></input>
   </form>
 {% endblock %}

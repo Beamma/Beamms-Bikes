@@ -1,38 +1,43 @@
 {% extends 'layout.html' %}
 {% block content %}
+<div class = "admin">
   {{ name }}
   <form method="POST" enctype=multipart/form-data>
-    <input type = "text" name = "name" value = "name"></input>
-    <select name="brand">
-      {% for brand in brands %}
-        <option name = "brands" value = "{{ brand[0] }}">{{ brand[1] }}</option>
-      {% endfor %}
-    </select>
-    <select name = "type">
-      {% for type in types %}
-        <option name = "types" value = "{{ type[0] }}">{{ type[1] }}</option>
-      {% endfor %}
-    </select>
-    <input type = "number" name = "price" value = "0000"></input>
-    <input type = "number" name = "year" value = "2020"></input>
-    <select name = "wheels">
-      {% for wheel in wheels %}
-        <option name = "wheel" value = "{{ wheel[0] }}">{{ wheel[1] }}</option>
-      {% endfor %}
-    </select>
-    <input type = "file" name = "image"></input>
-    <input type = "text" name = "description" value = "description"></input>
-    <select name = "genders">
-      {% for gender in genders %}
-        <option name = "gender" value = "{{ gender[0] }}">{{ gender[1] }}</option>
-      {% endfor %}
-    </select>
-    <div class="create_size">
-      {% for size in sizes %}
-        {{ size[1] }}:<input type="number" name="{{ size[0] }}" value="10"></input>
-      {% endfor %}
+    <div class = "create">
+      <h1> CREATE BIKES </h1>
+      <input type = "text" name = "name" placeholder="Name"></input>
+      <select name="brand">
+        {% for brand in brands %}
+          <option name = "brands" value = "{{ brand[0] }}">{{ brand[1] }}</option>
+        {% endfor %}
+      </select>
+      <select name = "type">
+        {% for type in types %}
+          <option name = "types" value = "{{ type[0] }}">{{ type[1] }}</option>
+        {% endfor %}
+      </select>
+      <input type = "number" name = "price" placeholder="Price"></input>
+      <input type = "number" name = "year" placeholder="Year"></input>
+      <select name = "wheels">
+        {% for wheel in wheels %}
+          <option name = "wheel" value = "{{ wheel[0] }}">{{ wheel[1] }}</option>
+        {% endfor %}
+      </select>
+      <input type = "file" name = "image"></input>
+      <input type = "text" name = "description" placeholder="Description"></input>
+      <select name = "genders">
+        {% for gender in genders %}
+          <option name = "gender" value = "{{ gender[0] }}">{{ gender[1] }}</option>
+        {% endfor %}
+      </select>
+      <div class="create_size">
+        {% for size in sizes %}
+          {{ size[1] }}:<input type="number" name="{{ size[0] }}" placeholder="Quantity"></input>
+        {% endfor %}
+      </div>
     </div>
     <div class = "delete">
+      <h1> DELETE BIKES </h1>
       <select name = "delete">
         <option name = "default" value = "default">SELECT A BIKE</option>
         {% for bike in bikes %}
@@ -40,6 +45,9 @@
         {% endfor %}
       </select>
     </div>
-    <input type = "submit"></input>
+    <div class = "submit">
+      <input type = "submit"></input>
+    </div>
   </form>
+</div>
 {% endblock %}

@@ -87,6 +87,12 @@ nav a {
   height: 180px;
 }
 
+.bikes hr {
+  color: black;
+  border: 3px solid black;
+  border-radius: 10px;
+}
+
 .bikes a {
   text-decoration: none;
   color: black;
@@ -159,4 +165,48 @@ tr:nth-child(even) {
 .register_status {
   font-family: 'Rubik', sans-serif;
   color: red;
+}
+.admin {
+  background-color: rgb(201, 201, 201);
+  height: 100vh;
+}
+
+.admin input, select{
+  font-family: 'Rubik', sans-serif;
+  margin: 5px;
+}
+
+.admin h1 {
+  font-family: 'Teko', sans-serif;
+  margin: 5px;
+}
+
+.admin .create {
+  margin: 3%;
+  border: 5px solid black;
+  border-radius: 5px;
+  text-align: center;
+  background-color: white;
+}
+
+.admin .delete {
+  margin: 3%;
+  margin-top: 0px;
+  border: 5px solid black;
+  border-radius: 5px;
+  width: 30%;
+  text-align: center;
+  background-color: white;
+  float: left;
+}
+
+.admin .submit {
+  margin: 3%;
+  margin-top: 0px;
+  border: 5px solid black;
+  border-radius: 5px;
+  width: 40%;
+  text-align: center;
+  background-color: white;
+  float: right;
 }

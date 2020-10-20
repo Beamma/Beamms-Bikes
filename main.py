@@ -297,19 +297,31 @@ def admin():
                 price = int(request.form.get("price"))
                 year = int(request.form.get("year"))
                 wheel = request.form.get("wheels")
-                print(wheel)
                 description = request.form.get("description")
                 gender = request.form.get("genders")
+                desc = request.form.get("description")
+
                 img_file = request.files["image"]
                 img_file.save(os.path.join("static/", img_file.filename))
                 img_location = "static/" + img_file.filename
+
                 conn = sqlite3.connect('Beamma-Bikes.db')
                 c = conn.cursor()
                 SQL = "INSERT INTO bikes(name,type,price,brand,year,wheel_size,image,description,gender) VALUES(?,?,?,?,?,?,?,?,?)"
                 c.execute(SQL,[name, type, price, brand, year, wheel, img_location, description, gender])
                 conn.commit()
+
+                c.execute("SELECT id FROM bikes WHERE name = ?", (name,))
+                bike_id = c.fetchall()
+                bike_id = bike_id[0]
+
+                size_id = []
+                for i in range(len(sizes)):
+                    SQL = "INSERT INTO bikes_sizes(bid,sid,quantity) VALUES(?,?,?)"
+                    c.execute(SQL,[bike_id[0], i+1, request.form.get(str(i+1))])
+                    conn.commit()
+
                 conn.close()
-                desc = request.form.get("description")
                 return render_template("admin.html", name = user_name, logstatus = session.get('logstatus', None), adminstatus = session.get('adminstatus', None), brands = brands, types = types, wheels = wheels, genders = genders, sizes = sizes)
             else:
                 return render_template("admin.html", name = user_name, logstatus = session.get('logstatus', None), adminstatus = session.get('adminstatus', None), brands = brands, types = types, wheels = wheels, genders = genders, sizes = sizes)

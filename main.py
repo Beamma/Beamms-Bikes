@@ -1,10 +1,15 @@
 from flask import Flask, redirect, url_for, render_template, request, session
-import sqlite3
+import sqlite3, os
 from werkzeug.security import generate_password_hash, check_password_hash
+from werkzeug.utils import secure_filename
+
+UPLOAD_FOLDER = '/static'
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
 
 app = Flask(__name__)
 app.config['SESSION_TYPE'] = 'memcached'
 app.config['SECRET_KEY'] = 'super secret key'
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 # Home Page
 @app.route('/')
@@ -286,6 +291,17 @@ def admin():
             conn.commit()
             conn.close()
             if request.method == "POST":
+                name = request.form.get("name")
+                brand = int(request.form.get("brand"))
+                type = int(request.form.get("type"))
+                price = int(request.form.get("price"))
+                year = int(request.form.get("year"))
+                wheel = request.form.get("wheel")
+                img = request.form.get("image")
+                print(img)
+                img_file = request.files["image"]
+                img_file.save(os.path.join("static/", img_file.filename))
+                desc = request.form.get("description")
                 return render_template("admin.html", name = user_name, logstatus = session.get('logstatus', None), adminstatus = session.get('adminstatus', None), brands = brands, types = types, wheels = wheels, genders = genders, sizes = sizes)
             else:
                 return render_template("admin.html", name = user_name, logstatus = session.get('logstatus', None), adminstatus = session.get('adminstatus', None), brands = brands, types = types, wheels = wheels, genders = genders, sizes = sizes)

@@ -1,7 +1,7 @@
 {% extends 'layout.html' %}
 {% block content %}
   {{ name }}
-  <form method="POST">
+  <form method="POST" enctype=multipart/form-data>
     <input type = "text" name = "name" value = "name"></input>
     <select name="brand">
       {% for brand in brands %}

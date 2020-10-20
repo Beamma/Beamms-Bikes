@@ -1,10 +1,12 @@
 {% extends "layout.html" %}
 {% block content %}
+<div class = "login">
   <h1>Login</h1>
   <form method="POST">
     <input type="text" name="user_name" value="Username" placeholder="User Name"></input>
     <input type="password" name="password" value="Username" placeholder="Password"></input>
-    <input type="submit"></input>
+    <input type="submit" id = "submit"></input>
   </form>
   <a href="{{ url_for('register') }}">Create Account</a>
+</div>
 {% endblock %}

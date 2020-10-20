@@ -1,7 +1,7 @@
 {% extends 'layout.html' %}
 {% block content %}
 <div class = "admin">
-  {{ name }}
+  <h2> Logged In As : {{ name }}</h2>
   <form method="POST" enctype=multipart/form-data>
     <div class = "create">
       <h1> CREATE BIKES </h1>
@@ -46,7 +46,7 @@
       </select>
     </div>
     <div class = "submit">
-      <input type = "submit"></input>
+      <input type = "submit" class = "submit_form"></input>
     </div>
   </form>
 </div>

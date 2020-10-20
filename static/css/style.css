@@ -36,6 +36,10 @@ html, body{
   color: white;
 }
 
+.block_content {
+  height: 150vh;
+}
+
 nav a:hover {
   background: grey;
 }
@@ -59,18 +63,33 @@ nav a {
 }
 
 .content .filters {
-  width: 20%;
-  height: 1000px;
+  width: 15%;
+  height: 100%;
   float: left;
+  background: white;
+  margin: 3px;
+  border: 3px solid;
+  border-radius: 5px;
+  font-family: 'Rubik', sans-serif;
 }
 
 .content .filters form {
   margin: 5px;
+  margin-right: 0px;
+}
+
+.content .filters .search {
+  width: 95%;
+  font-family: 'Rubik', sans-serif;
+  text-align: center;
+  font-size: 20px;
 }
 
 .content .filters b {
   float: left;
   width: 100%;
+  font-family: 'Teko', sans-serif;
+  font-size: 30px;
 }
 
 .bikes {
@@ -162,9 +181,90 @@ tr:nth-child(even) {
   background-color: #dddddd;
 }
 
+.register {
+  width: 60%;
+  margin: 20%;
+  border: 10px solid #c7c7c7;
+  border-radius: 20px;
+  height: 25%;
+  margin-top: 10%;
+}
+
+.register h1{
+  margin: 20px;
+  font-family: 'Teko', sans-serif;
+  text-align: center;
+}
+
+.register input{
+  font-family: 'Rubik', sans-serif;
+  margin: 15px;
+  width: 25%;
+  text-align: center;
+  height: 30px;
+}
+
+.register form{
+  margin-left: 10%;
+}
+
+.register .submit{
+  margin: 0px;
+  width: 100%;
+  margin-left: 30.5%;
+}
+
+.register .submit input{
+  color: green;
+  border: none;
+  border-radius: 5px;
+}
+
+.register input:hover {
+  cursor: pointer;
+}
+
 .register_status {
   font-family: 'Rubik', sans-serif;
   color: red;
+}
+
+.login {
+  width: 60%;
+  margin: 20%;
+  border: 10px solid #c7c7c7;
+  border-radius: 20px;
+  height: 25%;
+  margin-top: 10%;
+}
+
+.login h1{
+  margin: 20px;
+  font-family: 'Teko', sans-serif;
+  text-align: center;
+}
+
+.login input{
+  font-family: 'Rubik', sans-serif;
+  margin: 15px;
+  width: 25%;
+  text-align: center;
+  height: 30px;
+}
+
+.login #submit{
+  color: green;
+  border: None;
+  border-radius: 5px;
+  height: 35px;
+}
+
+.login form{
+  margin-left: 10%;
+}
+
+.login input:hover {
+  cursor: pointer;
 }
 .admin {
   background-color: rgb(201, 201, 201);
@@ -179,6 +279,14 @@ tr:nth-child(even) {
 .admin h1 {
   font-family: 'Teko', sans-serif;
   margin: 5px;
+}
+.admin h2 {
+  margin: 0px;
+  color: green;
+  font-family: 'Teko', sans-serif;
+  text-align: center;
+  font-size: 30px;
+  padding-top: 3%;
 }
 
 .admin .create {
@@ -203,10 +311,34 @@ tr:nth-child(even) {
 .admin .submit {
   margin: 3%;
   margin-top: 0px;
+  margin-left: 0px;
   border: 5px solid black;
   border-radius: 5px;
-  width: 40%;
+  width: 59%;
   text-align: center;
   background-color: white;
   float: right;
+  height: 85px;
+}
+
+.admin .submit_form {
+  margin: 17px;
+  width: 50%;
+  height: 50px;
+  color: green;
+  font-size: 25px;
+  font-family: teko;
+  border: none;
+  background: rgb(231, 231, 231);
+}
+
+footer {
+  height: 75px;
+  width: 100%;
+  background: black;
+  font-family: 'Teko', sans-serif;
+  font-size: 20px;
+  color: white;
+  text-align: center;
+  padding-top: 25px;
 }

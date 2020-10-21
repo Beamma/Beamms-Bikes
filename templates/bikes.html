@@ -29,6 +29,7 @@
   <div class = "bikes">
     <a href = "{{ url_for('bike', id=bike[2]) }}"> <img src = "{{ bike[1] }}" alt = "img" > </a>
     <a href = "{{ url_for('bike', id=bike[2]) }}">{{ bike[0] }}</a>
+    <p> ${{ bike[3] }} </p>
   </div>
   {% endfor %}
 </div>

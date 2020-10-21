@@ -35,7 +35,7 @@ def bikes():
     if request.method == 'POST':
 
 		# Variables
-        query = "SELECT DISTINCT bikes.name, bikes.image, bikes.id FROM bikes INNER JOIN bikes_sizes ON bikes_sizes.bid = bikes.id "
+        query = "SELECT DISTINCT bikes.name, bikes.image, bikes.id, bikes.price FROM bikes INNER JOIN bikes_sizes ON bikes_sizes.bid = bikes.id "
         parms = []
         filters = []
         search = request.form.get("search")
@@ -57,8 +57,7 @@ def bikes():
         conn = sqlite3.connect('Beamma-Bikes.db')
         c = conn.cursor()
         if search != "":
-            print("search")
-            query = "SELECT DISTINCT bikes.name, bikes.image, bikes.id FROM bikes WHERE bikes.name LIKE '%" + search + "%' "
+            query = "SELECT DISTINCT bikes.name, bikes.image, bikes.id, bikes.price FROM bikes WHERE bikes.name LIKE '%" + search + "%' "
             c.execute(query)
             bikes = c.fetchall()
             conn.close()
@@ -77,7 +76,7 @@ def bikes():
 		# Connect to databse and preform query
         conn = sqlite3.connect('Beamma-Bikes.db')
         c = conn.cursor()
-        c.execute("SELECT name, image, id FROM Bikes")
+        c.execute("SELECT name, image, id, price FROM Bikes")
         bikes = c.fetchall()
         conn.close()
         return render_template("bikes.html", bikes = bikes, filter_options = filter_options, logstatus = session.get('logstatus', None), adminstatus = session.get('adminstatus', None))
@@ -381,7 +380,7 @@ def admin():
                         SQL = "INSERT INTO bikes_sizes(bid,sid,quantity) VALUES(?,?,?)"
                         c.execute(SQL,[bike_id[0], i+1, request.form.get(str(i+1))])
                         conn.commit()
-                        conn.close()
+                    conn.close()
                 return render_template("admin.html", name = user_name, logstatus = session.get('logstatus', None), adminstatus = session.get('adminstatus', None), brands = brands, types = types, wheels = wheels, genders = genders, sizes = sizes, bikes = bikes)
             else:
                 return render_template("admin.html", name = user_name, logstatus = session.get('logstatus', None), adminstatus = session.get('adminstatus', None), brands = brands, types = types, wheels = wheels, genders = genders, sizes = sizes, bikes = bikes)

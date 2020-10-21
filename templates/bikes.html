@@ -28,8 +28,7 @@
   {% for bike in bikes %}
   <div class = "bikes">
     <a href = "{{ url_for('bike', id=bike[2]) }}"> <img src = "{{ bike[1] }}" alt = "img" > </a>
-    <hr></hr>
-    <a href = "{{ url_for('bike', id=bike[2]) }}"> {{ bike[0] }} </a>
+    <a href = "{{ url_for('bike', id=bike[2]) }}">{{ bike[0] }}</a>
   </div>
   {% endfor %}
 </div>

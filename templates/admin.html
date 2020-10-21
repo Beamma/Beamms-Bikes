@@ -24,12 +24,13 @@
         {% endfor %}
       </select>
       <input type = "file" name = "image"></input>
-      <input type = "text" name = "description" placeholder="Description"></input>
+      <!-- <input type = "text" name = "description" placeholder="Description"></input> -->
       <select name = "genders">
         {% for gender in genders %}
           <option name = "gender" value = "{{ gender[0] }}">{{ gender[1] }}</option>
         {% endfor %}
       </select>
+      <textarea name="description" rows="4" cols="150" placeholder="Description"></textarea>
       <div class="create_size">
         {% for size in sizes %}
           {{ size[1] }}:<input type="number" name="{{ size[0] }}" placeholder="Quantity"></input>

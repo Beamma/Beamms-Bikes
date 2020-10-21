@@ -1,9 +1,7 @@
 {% extends 'layout.html' %}
 {% block content %}
-  <form method="POST">
-    <input type = "submit" name = "logout" value = "Logout"></input>
-  </form>
-  {{ name }}
+<div class = "user">
+  <h2>Logged In As :{{ name }}</h2>
   <form method="POST">
   <div class = "cart">
     <table>
@@ -24,16 +22,28 @@
         <td>
           {{ items[5] }}
         </td>
-          <td><input type = "number" name = {{ items[3] }} value = {{ items[2] }} ></input><input type="checkbox" name="a{{ items[3] }}" value="Remove"></input></td>
+          <td><input type = "number" name = {{ items[3] }} value = {{ items[2] }} ></input></td>
       {% endfor %}
       </tr>
         <tr>
           <th>TOTAL:</th>
           <th>${{ price }}</th>
           <th></th>
-          <th>{{ quantity }}<input type ="submit" value = "Change Quantity"></input></th>
+          <th>{{ quantity }}</th>
         </tr>
+        <tr>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td id = "quantity"><input type ="submit" value = "Change Quantity"></input></td>
+
       </table>
-      </form>
-  </div>
+    </div>
+    </form>
+    <form method="POST">
+      <div class = "logout">
+        <input type = "submit" name = "logout" value = "Logout"></input>
+      </div>
+    </form>
+</div>
 {% endblock %}
